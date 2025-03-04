@@ -18,9 +18,9 @@ class jwt_token_auth extends abstract_auth {
             return $token->get_user();
 
         } catch (BeforeValidException|ExpiredException $ex) {
-            throw auth_failure_exception::factory('invalidtimedtoken', 'webservice')->setReason('expired_token');
+            throw auth_failure_exception::fromString('invalidtimedtoken', 'webservice')->setReason('expired_token');
         } catch (Exception $ex){
-            throw auth_failure_exception::factory('invalidtoken', 'webservice')->setReason('invalid_token');
+            throw auth_failure_exception::fromString('invalidtoken', 'webservice')->setReason('invalid_token');
         }
     }
 }

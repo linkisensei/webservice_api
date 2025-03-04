@@ -11,7 +11,7 @@ use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \League\Route\Http\Exception\HttpExceptionInterface;
 
-class json_strategy extends JsonStrategy{
+class json_strategy extends JsonStrategy {
     
     public static function factory() : static {
         return new static(new ResponseFactory());
@@ -52,7 +52,7 @@ class json_strategy extends JsonStrategy{
                     ]));
 
                     $response = $response->withAddedHeader('content-type', 'application/json');
-                    return $response->withStatus(500, strtok($exception->getMessage(), "\n"));
+                    return $response->withStatus(500);
                 }
             }
         };

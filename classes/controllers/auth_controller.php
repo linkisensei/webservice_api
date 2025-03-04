@@ -13,6 +13,7 @@ class auth_controller {
     }
 
     public static function create_token(ServerRequestInterface $request) : object {
+        throw new \Exception('test');
         return (object) ['test' => 'test'];
     }
 }

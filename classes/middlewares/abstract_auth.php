@@ -42,7 +42,7 @@ abstract class abstract_auth implements MiddlewareInterface {
         $other = ['username' => $user->username];
 
         if(empty($user)){
-            throw auth_failure_exception::factory('accessexception', 'webservice')->setReason('user_not_found')->setOther($other);
+            throw auth_failure_exception::fromString('accessexception', 'webservice')->setReason('user_not_found')->setOther($other);
         }
 
         // Cannot authenticate unless maintenance access is granted.
@@ -54,17 +54,17 @@ abstract class abstract_auth implements MiddlewareInterface {
 
         // Deleted users should not be able to call web service
         if (!empty($user->deleted)) {
-            throw auth_failure_exception::factory('wsaccessuserdeleted', 'webservice')->setReason('user_deleted')->setOther($other);
+            throw auth_failure_exception::fromString('wsaccessuserdeleted', 'webservice')->setReason('user_deleted')->setOther($other);
         }
 
         // Only confirmed user should be able to call web service
         if (empty($user->confirmed)) {
-            throw auth_failure_exception::factory('wsaccessuserunconfirmed', 'webservice')->setReason('user_unconfirmed')->setOther($other);
+            throw auth_failure_exception::fromString('wsaccessuserunconfirmed', 'webservice')->setReason('user_unconfirmed')->setOther($other);
         }
 
         // Check the user is suspended
         if (!empty($user->suspended)) {
-            throw auth_failure_exception::factory('wsaccessusersuspended', 'webservice')->setReason('user_suspended')->setOther($other);
+            throw auth_failure_exception::fromString('wsaccessusersuspended', 'webservice')->setReason('user_suspended')->setOther($other);
         }
 
         // Retrieve the authentication plugin if no previously done
@@ -76,13 +76,13 @@ abstract class abstract_auth implements MiddlewareInterface {
         if (!empty($auth->config->expiration) and $auth->config->expiration == 1) {
             $days2expire = $auth->password_expire($user->username);
             if (intval($days2expire) < 0 ) {
-                throw auth_failure_exception::factory('wsaccessuserexpired', 'webservice')->setReason('password_expired')->setOther($other);
+                throw auth_failure_exception::fromString('wsaccessuserexpired', 'webservice')->setReason('password_expired')->setOther($other);
             }
         }
     
         // Check if the auth method is nologin (in this case refuse connection)
         if ($user->auth=='nologin'){
-            throw auth_failure_exception::factory('wsaccessusernologin', 'webservice')->setReason('login')->setOther($other);
+            throw auth_failure_exception::fromString('wsaccessusernologin', 'webservice')->setReason('login')->setOther($other);
         }
     }
 

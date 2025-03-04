@@ -3,11 +3,17 @@
 use \League\Route\Http\Exception\HttpExceptionInterface;
 
 use \Psr\Http\Message\ResponseInterface;
-
-class api_exception extends \moodle_exception implements HttpExceptionInterface {
+use \Exception;
+use \Throwable;
+class api_exception extends Exception implements HttpExceptionInterface {
 
     protected array $headers = [];
     protected int $status = 500;
+    protected array $debug = [];
+
+    public function __construct(string $message, int $status = 500, ?\Throwable $previous = null){
+        parent::__construct($message, $status, $previous);
+    }
 
     public function buildJsonResponse(ResponseInterface $response): ResponseInterface {
         $this->headers['content-type'] = 'application/json';
@@ -45,7 +51,45 @@ class api_exception extends \moodle_exception implements HttpExceptionInterface 
         return $this->headers;
     }
 
-    public static function factory(...$args) : static {
-        return new static(...$args);
+    /**
+     * Sets debug information
+     *
+     * @param array $other
+     * @return static
+     */
+    public function setDebugInfo(array $info) : static {
+        $this->debug = $info;
+        return $this;
+    }
+
+    /**
+     * From moodle string
+     *
+     * @param string $errorcode
+     * @param string $module
+     * @param string $a
+     * @return static
+     */
+    public static function fromString(string $errorcode, string $module = '', string $a = '') : static {
+        return new static(get_string($errorcode, $module, $a));
+    }
+
+    /**
+     * Creates a new instance from another Exception
+     *
+     * @param \Exception $ex
+     * @param boolean $addAsPrevious
+     * @return static
+     */
+    public static function fromException(\Exception $ex, bool $addAsPrevious = false) : static {
+        $previous = $addAsPrevious ? $ex : null;
+
+        if($ex instanceof \League\Route\Http\Exception){
+            $instance = new static($ex->getMessage(), $ex->getStatusCode(), $previous);
+            $instance->setHeaders($ex->getHeaders());
+            return $instance;
+        }
+
+        return new static($ex->getMessage(), 500, $previous);
     }
 }
