@@ -3,30 +3,21 @@
 require_once(__DIR__ . '/vendor/autoload.php');
 require_once(__DIR__ . '/../../config.php');
 
-use Psr\Http\Message\ServerRequestInterface;
-
+// Assemblying request
 $request = \local_api\factories\request_factory::from_globals();
 
-$strategy = new League\Route\Strategy\JsonStrategy(new Laminas\Diactoros\ResponseFactory());
-$router   = (new League\Route\Router)->setStrategy($strategy);
+// Initiating router
+$router = new League\Route\Router;
 
-$router->get('/test',  function (ServerRequestInterface $request): array {
-    return [
-        'title'   => 'Test',
-        'version' => 1,
-    ];
-});
+// Setting JSON Strategy
+$router->setStrategy(\local_api\strategy\json_strategy::factory());
 
-// map a route
-$router->map('GET', '/', function (ServerRequestInterface $request): object {
-    return (object) [
-        'title'   => 'Home',
-        'version' => 1,
-    ];
-});
+// Loading routes
+require_once(__DIR__ . '/routes.php');
 
+// Loading other plugins routes
+\local_api\route_manager::apply_routes($router);
 
-$response = $router->handle($request);
-
-// send the response to the browser
-(new Laminas\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
+// Responding to browser
+$emmiter = new Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+$emmiter->emit($router->handle($request));

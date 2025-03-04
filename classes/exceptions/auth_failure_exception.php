@@ -1,29 +1,50 @@
 <?php namespace local_api\exceptions;
 
-use \core\event\webservice_login_failed;
+use \local_api\event\api_auth_failed;
+use \local_api\exceptions\api_exception;
 
-class auth_failure_exception extends \moodle_exception {
-
+class auth_failure_exception extends api_exception {
     protected string $reason;
     protected array $other = [];
 
-    public function __construct($errorcode, $module = '', $reason = '', $other = []) {
-        parent::__construct($errorcode, $module);
-        $this->reason = $reason;
-        $this->other = $other;
-        $this->other['reason'] = $reason;
-        $this->other['source'] = 'local_api';
+    public function __construct($errorcode, $module = '', $a = ''){
+        parent::__construct($errorcode, $module, '', $a, null);
     }
 
-    public function to_event() : webservice_login_failed {
-        return webservice_login_failed::create([
+    /**
+     * Converts into a api_auth_failed event
+     *
+     * @return local_api\event\api_auth_failed
+     */
+    public function toEvent() : api_auth_failed {
+        if(isset($this->reason)){
+            $this->other['reason'] = $this->reason;
+        }
+
+        return api_auth_failed::create([
             'other' => $this->other,
         ]);
     }
 
-    public function export() : object {
-        return (object) [
-            'message' => $this->getMessage(),
-        ];
+    /**
+     * Sets reason
+     *
+     * @param string $reason
+     * @return static
+     */
+    public function setReason(string $reason) : static {
+        $this->reason = $reason;
+        return $this;
+    }
+
+    /**
+     * Sets other information
+     *
+     * @param array $other
+     * @return static
+     */
+    public function setOther(array $other) : static {
+        $this->other = $other;
+        return $this;
     }
 }

@@ -7,6 +7,7 @@ use \Psr\Http\Message\ServerRequestInterface;
 use \Psr\Http\Server\MiddlewareInterface;
 use \Psr\Http\Server\RequestHandlerInterface;
 use \Laminas\Diactoros\Response\JsonResponse;
+use \local_api\exceptions\api_exception;
 use \local_api\exceptions\auth_failure_exception;
 
 abstract class abstract_auth implements MiddlewareInterface {
@@ -41,29 +42,29 @@ abstract class abstract_auth implements MiddlewareInterface {
         $other = ['username' => $user->username];
 
         if(empty($user)){
-            throw new auth_failure_exception('accessexception', 'webservice', 'user_not_found');
+            throw auth_failure_exception::factory('accessexception', 'webservice')->setReason('user_not_found')->setOther($other);
         }
 
         // Cannot authenticate unless maintenance access is granted.
         if (!empty($CFG->maintenance_enabled)){
             if(!has_capability('moodle/site:maintenanceaccess', context_system::instance(), $user)){
-                throw new moodle_exception('sitemaintenance', 'admin');
+                throw new api_exception('sitemaintenance', 'admin');
             }
         }
 
         // Deleted users should not be able to call web service
         if (!empty($user->deleted)) {
-            throw new auth_failure_exception('wsaccessuserdeleted', 'webservice', 'user_deleted', $other);
+            throw auth_failure_exception::factory('wsaccessuserdeleted', 'webservice')->setReason('user_deleted')->setOther($other);
         }
 
         // Only confirmed user should be able to call web service
         if (empty($user->confirmed)) {
-            throw new auth_failure_exception('wsaccessuserunconfirmed', 'webservice', 'user_unconfirmed', $other);
+            throw auth_failure_exception::factory('wsaccessuserunconfirmed', 'webservice')->setReason('user_unconfirmed')->setOther($other);
         }
 
         // Check the user is suspended
         if (!empty($user->suspended)) {
-            throw new auth_failure_exception('wsaccessusersuspended', 'webservice', 'user_suspended', $other);
+            throw auth_failure_exception::factory('wsaccessusersuspended', 'webservice')->setReason('user_suspended')->setOther($other);
         }
 
         // Retrieve the authentication plugin if no previously done
@@ -75,13 +76,13 @@ abstract class abstract_auth implements MiddlewareInterface {
         if (!empty($auth->config->expiration) and $auth->config->expiration == 1) {
             $days2expire = $auth->password_expire($user->username);
             if (intval($days2expire) < 0 ) {
-                throw new auth_failure_exception('wsaccessuserexpired', 'webservice', 'password_expired', $other);
+                throw auth_failure_exception::factory('wsaccessuserexpired', 'webservice')->setReason('password_expired')->setOther($other);
             }
         }
     
         // Check if the auth method is nologin (in this case refuse connection)
         if ($user->auth=='nologin'){
-            throw new auth_failure_exception('wsaccessusernologin', 'webservice', 'login', $other);
+            throw auth_failure_exception::factory('wsaccessusernologin', 'webservice')->setReason('login')->setOther($other);
         }
     }
 
@@ -103,7 +104,7 @@ abstract class abstract_auth implements MiddlewareInterface {
 
         } catch (\Exception $ex) {
             if($ex instanceof auth_failure_exception){
-                $ex->to_event()->trigger();
+                $ex->toEvent()->trigger();
             }
 
             return new JsonResponse(['message' => $ex->getMessage()], 400);
