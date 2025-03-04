@@ -1,0 +1,14 @@
+{
+    "name": "local/api",
+    "authors": [
+        {
+            "name": "Lucas Barreto",
+            "email": "lucas.b.fisica@gmail.com"
+        }
+    ],
+    "require": {
+        "league/route": "^6.2",
+        "laminas/laminas-diactoros": "^3.5",
+        "laminas/laminas-httphandlerrunner": "^2.11"
+    }
+}
