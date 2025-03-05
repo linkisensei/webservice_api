@@ -4,7 +4,7 @@ use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
 use \InvalidArgumentException;
 
-final class access_token {
+class access_token {
     private static string $secret;
     private static int $ttl;
 
@@ -15,8 +15,8 @@ final class access_token {
         private readonly object $payload
     ) {}
 
-    public static function create(object $user): self {
-        self::init();
+    public static function create(object $user): static {
+        static::init();
 
         if (!isset($user->id) || !is_int($user->id)) {
             throw new InvalidArgumentException('User object must have a valid ID.');
@@ -32,8 +32,8 @@ final class access_token {
         return new self($token, $payload);
     }
 
-    public static function parse(string $token): self {
-        self::init();
+    public static function parse(string $token): static {
+        static::init();
 
         try {
             $decoded = JWT::decode($token, new Key(self::$secret, self::ALGORITHM));

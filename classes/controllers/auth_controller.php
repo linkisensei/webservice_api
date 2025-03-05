@@ -16,4 +16,9 @@ class auth_controller {
         throw new \Exception('test');
         return (object) ['test' => 'test'];
     }
+
+    public static function refresh_token(ServerRequestInterface $request) : object {
+        throw new \Exception('test');
+        return (object) ['test' => 'test'];
+    }
 }
