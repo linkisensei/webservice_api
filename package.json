@@ -1,0 +1,17 @@
+{
+  "name": "webservice_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "testcurrent": "cd ../../ && php ./vendor/bin/phpunit --testsuite webservice_api_testsuite --group current --testdox-html webservice/api/tests/currents.html",
+    "test": "cd ../../ && php ./vendor/bin/phpunit --testsuite webservice_api_testsuite --exclude skip --testdox-html webservice/api/tests/tests.html",
+    "initphpunit": "cd ../../ && php admin/tool/phpunit/cli/init.php",
+    "upgrade" : "cd ../../admin/cli/ && php upgrade.php --non-interactive"
+  },
+  "author": "Lucas Barreto",
+  "license": ""
+}

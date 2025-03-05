@@ -12,7 +12,7 @@ class request_factory {
     }
 
     protected static function patch_uri_path(ServerRequestInterface $request) : ServerRequestInterface {
-        $root = new moodle_url('/local/api');
+        $root = new moodle_url('/webservice/api');
         $uri = $request->getUri()->getPath();
         $uri = '/' . ltrim(substr($uri, strlen($root->get_path())), '/');
         return $request->withUri($request->getUri()->withPath($uri));

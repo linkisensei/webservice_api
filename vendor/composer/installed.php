@@ -1,6 +1,6 @@
 <?php return array(
     'root' => array(
-        'name' => 'local/api',
+        'name' => 'webservice/api',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
         'reference' => '5d50c2acf69d583c8225dda710c92202c3b2d632',
@@ -46,7 +46,7 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'local/api' => array(
+        'webservice/api' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
             'reference' => '5d50c2acf69d583c8225dda710c92202c3b2d632',

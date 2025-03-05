@@ -15,9 +15,9 @@ abstract class abstract_controller {
         $relative = trim($relative, '/');
 
         if($path = trim(static::RESOURCE_PATH, '/')){
-            $url = new moodle_url("/local/api/{$path}/{$relative}");
+            $url = new moodle_url("/webservice/api/{$path}/{$relative}");
         }else{
-            $url = new moodle_url("/local/api/{$relative}");
+            $url = new moodle_url("/webservice/api/{$relative}");
         }
         
         return $url->out(false);

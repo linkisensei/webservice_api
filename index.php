@@ -1,37 +1,12 @@
 <?php declare(strict_types=1);
 
-define('AJAX_SCRIPT', true);
+define('WS_SERVER', true);
 
 require_once(__DIR__ . '/vendor/autoload.php');
 require_once(__DIR__ . '/../../config.php');
 
 // Exception Handler
-set_exception_handler(function(Throwable $th){
-    global $CFG;
-    
-    $info = [
-        'status' => 500,
-        'message' => $th->getMessage(),
-    ];
-
-    if($CFG->debugdeveloper){
-        $info['file'] = $th->getFile();
-        $info['line'] = $th->getLine();
-        $info['trace'] = $th->getTrace();
-    }
-
-    if(is_a($th, \League\Route\Http\Exception\HttpExceptionInterface::class, true)){
-        $info['status'] = $th->getStatusCode();
-
-        foreach ($th->getHeaders() as $key => $value) {
-            header("$key: $value");
-        }
-    }
-
-    http_response_code($info['status']);
-    echo json_encode($info);
-    exit();
-});
+\webservice_api\handlers\exception_handler::register();
 
 // Assemblying request
 $request = \webservice_api\factories\request_factory::from_globals();

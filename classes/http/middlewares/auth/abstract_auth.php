@@ -107,7 +107,8 @@ abstract class abstract_auth implements MiddlewareInterface {
                 $ex->toEvent()->trigger();
             }
 
-            return new JsonResponse(['message' => $ex->getMessage()], 400);
+            throw $ex;
+            // return new JsonResponse(['message' => $ex->getMessage()], 400);
         }
     }
 
