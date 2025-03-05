@@ -1,4 +1,4 @@
-<?php namespace local_api\http\response;
+<?php namespace webservice_api\http\response;
 
 use \JsonSerializable;
 

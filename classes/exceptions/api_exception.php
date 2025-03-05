@@ -1,4 +1,4 @@
-<?php namespace local_api\exceptions;
+<?php namespace webservice_api\exceptions;
 
 use \League\Route\Http\Exception\HttpExceptionInterface;
 

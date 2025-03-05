@@ -1,12 +1,12 @@
-<?php namespace local_api;
+<?php namespace webservice_api;
 
-use \local_api\exceptions\api_exception;
+use \webservice_api\exceptions\api_exception;
 
 /**
  * Singleton config class
  */
 final class config {
-    const PLUGIN_NAME = 'local_api';
+    const PLUGIN_NAME = 'webservice_api';
 
     const SETTING_JWT_SECRET = 'jwt_secret';
     const SETTING_JWT_TTL = 'jwt_ttl';

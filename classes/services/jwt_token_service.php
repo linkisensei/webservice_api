@@ -1,7 +1,7 @@
-<?php namespace local_api\services;
+<?php namespace webservice_api\services;
 
-use \local_api\config;
-use \local_api\value_objects\auth\jwt_token;
+use \webservice_api\config;
+use \webservice_api\value_objects\auth\jwt_token;
 
 final class jwt_token_service {
 

@@ -1,4 +1,4 @@
-<?php namespace local_api\routing;
+<?php namespace webservice_api\routing;
 
 use \Closure;
 use \League\Route\Router;

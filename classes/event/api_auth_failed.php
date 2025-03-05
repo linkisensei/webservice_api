@@ -1,4 +1,4 @@
-<?php namespace local_api\event;
+<?php namespace webservice_api\event;
 
 class api_auth_failed extends \core\event\base {
 
@@ -23,7 +23,7 @@ class api_auth_failed extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('event:api_auth_failed', 'local_api');
+        return get_string('event:api_auth_failed', 'webservice_api');
     }
 
     /**

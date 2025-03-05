@@ -1,9 +1,9 @@
-<?php namespace local_api\controllers;
+<?php namespace webservice_api\controllers;
 
 use \moodle_database;
 use \moodle_url;
-use \local_api\http\response\hal_resource;
-use \local_api\controllers\abstract_controller;
+use \webservice_api\http\response\hal_resource;
+use \webservice_api\controllers\abstract_controller;
 
 class user_controller extends abstract_controller {
     const RESOURCE_PATH = 'users';

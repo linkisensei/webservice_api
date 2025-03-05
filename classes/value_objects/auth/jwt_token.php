@@ -1,4 +1,4 @@
-<?php namespace local_api\value_objects\auth;
+<?php namespace webservice_api\value_objects\auth;
 
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;

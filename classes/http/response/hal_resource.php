@@ -1,6 +1,6 @@
-<?php namespace local_api\http\response;
+<?php namespace webservice_api\http\response;
 
-use \local_api\http\response\api_resource;
+use \webservice_api\http\response\api_resource;
 
 /**
  * Class hal_resource

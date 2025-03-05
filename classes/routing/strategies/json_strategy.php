@@ -1,4 +1,4 @@
-<?php namespace local_api\routing\strategies;
+<?php namespace webservice_api\routing\strategies;
 
 use \League\Route\Strategy\JsonStrategy;
 use \Laminas\Diactoros\ResponseFactory;

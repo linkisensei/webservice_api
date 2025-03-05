@@ -1,4 +1,4 @@
-<?php namespace local_api\controllers;
+<?php namespace webservice_api\controllers;
 
 use \moodle_url;
 

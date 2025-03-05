@@ -1,4 +1,4 @@
-<?php namespace local_api\factories;
+<?php namespace webservice_api\factories;
 
 use \moodle_url;
 use \Psr\Http\Message\ServerRequestInterface;

@@ -1,4 +1,4 @@
-<?php namespace local_api\http\middlewares\log;
+<?php namespace webservice_api\http\middlewares\log;
 
 class request_logger {
     

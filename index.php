@@ -34,19 +34,19 @@ set_exception_handler(function(Throwable $th){
 });
 
 // Assemblying request
-$request = \local_api\factories\request_factory::from_globals();
+$request = \webservice_api\factories\request_factory::from_globals();
 
 // Initiating router
 $router = new \League\Route\Router;
 
 // Setting JSON Strategy
-$router->setStrategy(\local_api\routing\strategies\json_strategy::factory());
+$router->setStrategy(\webservice_api\routing\strategies\json_strategy::factory());
 
 // Loading routes
 require_once(__DIR__ . '/routes.php');
 
 // Loading other plugins routes
-\local_api\routing\route_manager::apply_routes($router);
+\webservice_api\routing\route_manager::apply_routes($router);
 
 // Responding to browser
 $emmiter = new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter;

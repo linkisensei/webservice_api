@@ -1,14 +1,14 @@
-<?php namespace local_api\http\middlewares\auth;
+<?php namespace webservice_api\http\middlewares\auth;
 
 use \Psr\Http\Message\ServerRequestInterface;
-use \local_api\http\middlewares\auth\abstract_auth;
-use \local_api\exceptions\auth_failure_exception;
+use \webservice_api\http\middlewares\auth\abstract_auth;
+use \webservice_api\exceptions\auth_failure_exception;
 
 use \Exception;
 use \Firebase\JWT\BeforeValidException;
 use \Firebase\JWT\ExpiredException;
 
-use \local_api\services\jwt_token_service;
+use \webservice_api\services\jwt_token_service;
 
 class jwt_token_auth extends abstract_auth {
 

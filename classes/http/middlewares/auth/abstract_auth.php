@@ -1,4 +1,4 @@
-<?php namespace local_api\http\middlewares\auth;
+<?php namespace webservice_api\http\middlewares\auth;
 
 use \context_system;
 use \moodle_exception;
@@ -7,8 +7,8 @@ use \Psr\Http\Message\ServerRequestInterface;
 use \Psr\Http\Server\MiddlewareInterface;
 use \Psr\Http\Server\RequestHandlerInterface;
 use \Laminas\Diactoros\Response\JsonResponse;
-use \local_api\exceptions\api_exception;
-use \local_api\exceptions\auth_failure_exception;
+use \webservice_api\exceptions\api_exception;
+use \webservice_api\exceptions\auth_failure_exception;
 
 abstract class abstract_auth implements MiddlewareInterface {
 

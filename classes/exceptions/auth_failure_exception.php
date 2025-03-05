@@ -1,7 +1,7 @@
-<?php namespace local_api\exceptions;
+<?php namespace webservice_api\exceptions;
 
-use \local_api\event\api_auth_failed;
-use \local_api\exceptions\api_exception;
+use \webservice_api\event\api_auth_failed;
+use \webservice_api\exceptions\api_exception;
 
 class auth_failure_exception extends api_exception {
     protected string $reason;
@@ -9,7 +9,7 @@ class auth_failure_exception extends api_exception {
     /**
      * Converts into a api_auth_failed event
      *
-     * @return local_api\event\api_auth_failed
+     * @return webservice_api\event\api_auth_failed
      */
     public function toEvent() : api_auth_failed {
         if(isset($this->reason)){

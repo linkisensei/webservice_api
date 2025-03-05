@@ -1,11 +1,11 @@
-<?php namespace local_api\controllers\auth;
+<?php namespace webservice_api\controllers\auth;
 
 use \Psr\Http\Message\ServerRequestInterface;
 use \moodle_database;
-use \local_api\exceptions\auth_failure_exception;
-use \local_api\config;
-use \local_api\services\jwt_token_service;
-use \local_api\controllers\abstract_controller;
+use \webservice_api\exceptions\auth_failure_exception;
+use \webservice_api\config;
+use \webservice_api\services\jwt_token_service;
+use \webservice_api\controllers\abstract_controller;
 
 class auth_controller extends abstract_controller{
 
