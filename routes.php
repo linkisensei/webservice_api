@@ -1,3 +1,3 @@
 <?php
 
-$router->post('/auth/token', [\local_api\controllers\auth_controller::class, 'create_token']);
+$router->post('/auth/token', [\local_api\controllers\auth\auth_controller::class, 'create_token']);

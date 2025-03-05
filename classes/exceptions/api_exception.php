@@ -13,6 +13,7 @@ class api_exception extends Exception implements HttpExceptionInterface {
 
     public function __construct(string $message, int $status = 500, ?\Throwable $previous = null){
         parent::__construct($message, $status, $previous);
+        $this->setStatusCode($status);
     }
 
     public function buildJsonResponse(ResponseInterface $response): ResponseInterface {

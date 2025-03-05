@@ -1,7 +1,7 @@
 <?php namespace local_api\factories;
 
 use \moodle_url;
-use Psr\Http\Message\ServerRequestInterface;
+use \Psr\Http\Message\ServerRequestInterface;
 use \Laminas\Diactoros\ServerRequestFactory;
 
 class request_factory {

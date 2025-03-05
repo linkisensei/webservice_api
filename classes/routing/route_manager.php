@@ -1,6 +1,6 @@
-<?php namespace local_api;
+<?php namespace local_api\routing;
 
-use Closure;
+use \Closure;
 use \League\Route\Router;
 
 class route_manager {

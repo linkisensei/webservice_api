@@ -1,4 +1,4 @@
-<?php namespace local_api\adapters;
+<?php namespace local_api\routing\adapters;
 
 use \Psr\Http\Message\ServerRequestInterface;
 

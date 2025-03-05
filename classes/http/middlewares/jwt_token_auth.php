@@ -1,7 +1,7 @@
-<?php namespace local_api\middlewares;
+<?php namespace local_api\http\middlewares;
 
 use \Psr\Http\Message\ServerRequestInterface;
-use \local_api\middlewares\abstract_auth;
+use \local_api\middlewares\http\abstract_auth;
 use \local_api\exceptions\auth_failure_exception;
 
 use \Exception;
