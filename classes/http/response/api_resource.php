@@ -8,8 +8,8 @@ abstract class api_resource implements JsonSerializable {
     protected array $embedded = [];
     protected string $format = '';
 
-    public function __construct(array $attributes = []){
-        $this->attributes = $attributes;
+    public function __construct(array|object $attributes = []){
+        $this->attributes = (array) $attributes;
     }
 
     public function add_attribute(string $key, mixed $value): self {

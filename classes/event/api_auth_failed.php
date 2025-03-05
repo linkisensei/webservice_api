@@ -1,4 +1,4 @@
-<?php namespace local_api\event\api_auth_failed;
+<?php namespace local_api\event;
 
 class api_auth_failed extends \core\event\base {
 
@@ -39,10 +39,6 @@ class api_auth_failed extends \core\event\base {
         parent::validate_data();
         if (!isset($this->other['reason'])) {
            throw new \coding_exception('The \'reason\' value must be set in other.');
-        } else if (!isset($this->other['method'])) {
-           throw new \coding_exception('The \'method\' value must be set in other.');
-        } else if (isset($this->other['token'])) {
-           throw new \coding_exception('The \'token\' value must not be set in other.');
         }
     }
 

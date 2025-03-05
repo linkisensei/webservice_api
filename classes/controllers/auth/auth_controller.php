@@ -5,8 +5,9 @@ use \moodle_database;
 use \local_api\exceptions\auth_failure_exception;
 use \local_api\config;
 use \local_api\services\jwt_token_service;
+use \local_api\controllers\abstract_controller;
 
-class auth_controller {
+class auth_controller extends abstract_controller{
 
     protected moodle_database $db;
     protected $token_service;

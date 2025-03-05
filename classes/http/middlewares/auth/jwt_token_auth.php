@@ -1,21 +1,29 @@
-<?php namespace local_api\http\middlewares;
+<?php namespace local_api\http\middlewares\auth;
 
 use \Psr\Http\Message\ServerRequestInterface;
-use \local_api\middlewares\http\abstract_auth;
+use \local_api\http\middlewares\auth\abstract_auth;
 use \local_api\exceptions\auth_failure_exception;
 
 use \Exception;
 use \Firebase\JWT\BeforeValidException;
 use \Firebase\JWT\ExpiredException;
 
-use \local_api\value_objects\auth\access_token;
+use \local_api\services\jwt_token_service;
 
 class jwt_token_auth extends abstract_auth {
 
+    protected $token_service;
+
+    public function __construct(){
+        $this->token_service = new jwt_token_service();
+    }
+
     protected function get_authenticated_user(ServerRequestInterface $request) : ?object {
+        global $DB;
+
         try {
-            $token = access_token::parse($this->get_bearer_token($request) ?: '');
-            return $token->get_user();
+            $token = $this->token_service->parse_access_token($this->get_bearer_token($request) ?: '');
+            return $DB->get_record('user', ['id' => $token->get_user_id()]) ?: null;
 
         } catch (BeforeValidException|ExpiredException $ex) {
             throw auth_failure_exception::fromString('invalidtimedtoken', 'webservice')->setReason('expired_token');

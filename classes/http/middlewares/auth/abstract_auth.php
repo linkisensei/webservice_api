@@ -1,4 +1,4 @@
-<?php namespace local_api\http\middlewares;
+<?php namespace local_api\http\middlewares\auth;
 
 use \context_system;
 use \moodle_exception;
