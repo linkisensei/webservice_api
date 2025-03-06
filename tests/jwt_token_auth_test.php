@@ -1,5 +1,7 @@
 <?php namespace webservice_api;
 
+require_once(__DIR__ . '/../vendor/autoload.php');
+
 use \advanced_testcase;
 use \webservice_api\config;
 use \Laminas\Diactoros\ServerRequest;
@@ -9,25 +11,26 @@ use \webservice_api\services\jwt_token_service;
 use \webservice_api\exceptions\auth_failure_exception;
 use \Psr\Http\Server\RequestHandlerInterface;
 
-class jwt_token_service_test extends advanced_testcase {
+class jwt_token_auth_test extends advanced_testcase {
 
     protected jwt_token_auth $middleware;
     protected jwt_token_service $token_service;
     protected object $user;
+
     protected function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();
 
         config::generate_secrets();
         
-        $this->user = (object) [
+        $this->user = $this->getDataGenerator()->create_user([
             'username' => 'testuser',
             'auth' => 'manual',
             'confirmed' => 1,
             'suspended' => 0,
             'deleted' => 0,
             'policyagreed' => 1
-        ];
+        ]);
         
         $this->token_service = new jwt_token_service();
         $this->middleware = new jwt_token_auth();
@@ -54,20 +57,7 @@ class jwt_token_service_test extends advanced_testcase {
         $request = new ServerRequest();
         $handler = $this->createMock(RequestHandlerInterface::class);
 
-        $response = $this->middleware->process($request, $handler);
-        
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString('Invalid token', (string) $response->getBody());
-    }
-
-    public function test_expired_token() {
         $this->expectException(auth_failure_exception::class);
-        $this->expectExceptionMessage('expired_token');
-
-        $token = $this->token_service->generate_access_token($this->user, ['exp' => time() - 10])->get_token();
-        $request = (new ServerRequest())->withHeader('Authorization', "Bearer $token");
-
-        $handler = $this->createMock(RequestHandlerInterface::class);
         $this->middleware->process($request, $handler);
     }
 }

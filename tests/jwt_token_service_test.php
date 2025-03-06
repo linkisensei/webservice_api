@@ -1,5 +1,7 @@
 <?php namespace webservice_api;
 
+require_once(__DIR__ . '/../vendor/autoload.php');
+
 use \advanced_testcase;
 use \webservice_api\config;
 use webservice_api\services\jwt_token_service;
