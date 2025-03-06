@@ -1,7 +1,8 @@
 <?php namespace webservice_api\models\auth;
 
 use \core\persistent;
-use webservice_api\exceptions\api_exception;
+use \webservice_api\exceptions\api_exception;
+use \webservice_api\models\auth\client_secret;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -13,7 +14,7 @@ class client extends persistent {
 
     protected static function define_properties() {
         return [
-            'uuid' => [
+            'clientid' => [
                 'type' => PARAM_RAW,
             ],
             'userid' => [
@@ -31,12 +32,12 @@ class client extends persistent {
     }
 
     protected function before_validate() {
-        if(empty($this->get('uuid'))){
-            $this->raw_set('uuid', self::generate_uuid());
+        if(empty($this->get('clientid'))){
+            $this->raw_set('clientid', self::generate_clientid());
         }
     }
 
-    public static function generate_uuid() : string {
+    public static function generate_clientid() : string {
         return str_replace('-', '', \core\uuid::generate());
     }
 
@@ -49,11 +50,15 @@ class client extends persistent {
         return $this->user;
     }
 
-    public static function get_by_client_id(string $client_id) : ?static {
-        return static::get_record(['uuid' => $client_id]) ?: null;
+    public static function get_by_clientid(string $client_id, $throw_exception = true) : ?static {
+        return static::get_record(['clientid' => $client_id]) ?: null;
     }
 
-    public static function get_by_user_id(string $userid) : ?static {
+    public static function get_by_userid(string $userid) : ?static {
         return static::get_record(['userid' => $userid]) ?: null;
+    }
+
+    public function get_secrets() : array {
+        return client_secret::list_by_client($this);
     }
 }

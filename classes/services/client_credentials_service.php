@@ -7,7 +7,6 @@ use \webservice_api\models\auth\client_secret;
 use \webservice_api\exceptions\api_exception;
 
 final class client_credentials_service {
-
     private config $config;
     private context $context;
 
@@ -16,7 +15,7 @@ final class client_credentials_service {
         $this->context = \context_system::instance();
     }
 
-    public function create_client(int $userid){
+    public function create_client(int $userid) : client {
         $this->check_permissions($userid);
 
         $client = new client(0, (object)['userid' => $userid]);
@@ -25,56 +24,83 @@ final class client_credentials_service {
         return $client;
     }
 
-    public function get_client(int $userid){
-        if($client = client::get_by_user_id($userid)){
-            return $client;
+    public function get_client(string $clientid) : client {
+        return $this->get_client_and_check_permissions($clientid);
+    }
+
+    protected function get_client_and_check_permissions(string|client $client) : client {
+        $client = is_string($client) ? client::get_by_clientid($client) : $client;
+
+        if(!$client){
+            throw new api_exception('Client not found!', 404);
         }
 
-        throw new api_exception('Client not found!', 404);
+        $this->check_permissions((int) $client->get('userid'));
+        return $client;
+    }
+
+    public function delete_client(string|client $client) : client {
+        global $DB;
+        
+        $client = $this->get_client_and_check_permissions($client);
+
+        try {
+            $transaction = $DB->start_delegated_transaction();
+
+            foreach ($client->get_secrets() as $secret) {
+                $secret->delete();
+            }
+    
+            $client->delete();
+            $transaction->allow_commit();
+
+        } catch (\Throwable $th) {
+            $transaction->rollback($th);
+        }
+
+        return $client;
+    }
+
+    public function list_client_secrets(string|client $client) : array {
+        $client = $this->get_client_and_check_permissions($client);
+        return $client->get_secrets();
     }
 
     public function create_client_secret(string|client $client, string $name = '', int $valid_until = 0) : client_secret {
-        if(is_string($client)){
-            $client = client::get_by_client_id($client);
-        }
+        $client = $this->get_client_and_check_permissions($client);
 
-        if(empty($client)){
-            throw new api_exception('Client not found!', 404);
-        }
-
-        $this->check_permissions((int) $client->get('userid'));
-
-        $secret = new client_secret(0, (object) [
+        $secret = client_secret::create_from_client($client, [
             'name' => $name,
             'validuntil' => $valid_until,
         ]);
 
-        $secret->set_client($client)->save();
+        $secret->save();
         return $secret;
     }
 
-    public function update_client_secret(string|client $client, string $name = '', int $valid_until = 0) : client_secret {
-        if(is_string($client)){
-            $client = client::get_by_client_id($client);
-        }
+    public function update_client_secret(string|client $client, string $secretid, string $name, int $valid_until) : client_secret {
+        $secret = $this->get_client_secret($client, $secretid);
 
-        if(empty($client)){
-            throw new api_exception('Client not found!', 404);
-        }
+        $secret->set('name', $name);
+        $secret->set('validuntil', $valid_until);
 
-        $this->check_permissions((int) $client->get('userid'));
-
-        $secret = new client_secret(0, (object) [
-            'name' => $name,
-            'validuntil' => $valid_until,
-        ]);
-
-        $secret->set_client($client)->save();
+        $secret->save();
         return $secret;
     }
 
-    public function validate_credentials(string $client_id, string $client_secret) : client_secret {
-        return client_secret::find($client_id, $client_secret);
+    public function get_client_secret(string|client $client, string $secretid) : client_secret {
+        $client = $this->get_client_and_check_permissions($client);
+        $secret = client_secret::get_record(['client' => $client->get('id'), 'secretid' => $secretid]);
+        
+        if(!$secret){
+            throw new api_exception('Client secret not found!', 404);
+        }
+
+        return $secret;
+    }
+
+    public function validate_credentials(string $clientid, string $secret) : ?client_secret {
+        return client_secret::find($clientid, $secret);
     }
 
     /**

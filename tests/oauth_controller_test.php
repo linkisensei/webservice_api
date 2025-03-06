@@ -111,8 +111,8 @@ class oauth_controller_test extends advanced_testcase {
         
         $request = $this->make_request('POST', '/api/oauth/token', [
             'grant_type' => 'client_credentials',
-            'client_id' => $client->get('uuid'),
-            'client_secret' => $secret->get_raw_secret(),
+            'client_id' => $client->get('clientid'),
+            'client_secret' => $secret->get_secret(),
         ]);
     
         $response = (array) $this->oauth_controller->issue_token($request);

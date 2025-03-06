@@ -6,7 +6,6 @@ use \webservice_api\exceptions\auth_failure_exception;
 use \webservice_api\config;
 use \webservice_api\services\oauth_token_service;
 use \webservice_api\controllers\abstract_controller;
-use \webservice_api\models\auth\client_credential;
 use webservice_api\services\client_credentials_service;
 
 class oauth_controller extends abstract_controller{

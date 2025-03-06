@@ -10,14 +10,17 @@ class client_secret extends persistent {
     const TABLE = 'webservice_api_clientsecrets';
 
     protected client $client;
-    protected ?string $raw_secret = null;
+    protected ?string $secret = null;
 
     protected static function define_properties() {
         return [
             'client' => [
                 'type' => PARAM_INT,
             ],
-            'secret' => [
+            'secretid' => [
+                'type' => PARAM_RAW,
+            ],
+            'secrethash' => [
                 'type' => PARAM_RAW,
             ],
             'name' => [
@@ -31,20 +34,15 @@ class client_secret extends persistent {
     }
 
     protected function before_validate() {
-        if(empty($this->get('secret'))){
+        if(empty($this->secret)){
             $this->generate_client_secret();
         }
     }
 
-    protected function before_create() {
-        $this->raw_set('secret', self::hash_secret('secret'));
-    }
-
 
     public function generate_client_secret() : static {
-        $this->raw_secret = $this->raw_get('secret');
-        $hash = uniqid($this->get('client')).bin2hex(random_bytes(16));
-        $this->raw_set('secret', $hash);
+        $this->secret = uniqid().bin2hex(random_bytes(16));
+        $this->raw_set('secrethash', static::hash_secret($this->secret));
         return $this;
     }
 
@@ -78,45 +76,59 @@ class client_secret extends persistent {
      *
      * @return string
      */
-    public function get_raw_secret() : ?string {
-        return $this->raw_secret;
+    public function get_secret() : ?string {
+        return $this->secret;
+    }
+
+    public static function get_by_secretid(string $secretid) : ?static {
+        return static::get_record(['secretid' => $secretid]) ?: null;
+    }
+
+    public static function list_by_client(client $client) : array {
+        return static::get_records(['client' => $client->get('id')]);
     }
 
     /**
-     * Searches for a client_credential by its
+     * Searches for a client_secret by its
      * client id and secret.
      *
-     * @param string|int $client_id
-     * @param string $client_secret
+     * @param string|int $clientid
+     * @param string $secret
      * @return static|null
      */
-    public static function find(string|int $client_id, string $client_secret) : ?static {
+    public static function find(string|int $clientid, string $secret) : ?static {
         global $DB;
 
         $clients_table = '{'.client::TABLE.'}';
         $secrets_table = '{'.static::TABLE.'}';
 
         $params = [
-            'clientid' => $client_id,
-            'secrethash' => self::hash_secret($client_secret),
+            'clientid' => $clientid,
+            'secrethash' => self::hash_secret($secret),
         ];
 
-        if(is_numeric($client_id)){
+        if(is_numeric($clientid)){
             $sql = "SELECT cs.*
                 FROM $secrets_table cs
                 WHERE cs.client = :clientid
-                    AND c.secret = :secrethash";
+                    AND cs.secret = :secrethash";
         }else{
             $sql = "SELECT cs.*
                 FROM $clients_table c
                     JOIN $secrets_table cs
-                WHERE c.uuid = :clientuuid
-                    AND c.secret = :secrethash";
+                WHERE c.clientid = :clientid
+                    AND cs.secret = :secrethash";
         }
 
         if($record = $DB->get_record_sql($sql, $params)){
             return new static(0, $record);
         }
         return null;
+    }
+
+    public static function create_from_client(client $client, array|object $data = []){
+        $data = (object) $data;
+        $data->client = $client->get('id');
+        return (new static(0, $data))->set_client($client);
     }
 }
