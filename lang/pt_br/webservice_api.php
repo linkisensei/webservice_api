@@ -9,7 +9,7 @@ $string['settings:manage_title'] = 'Manage REST API';
 $string['settings:jwt_ttl'] = 'Token expires in';
 $string['settings:jwt_refresh_ttl'] = 'Refresh token expires in';
 
-$string['api:use'] = 'access this API';
-$string['api:managecredentials'] = 'manage client credentials';
-$string['api:manageselfcredentials'] = 'manage your own client credentials';
-$string['api:config'] = 'configure the API settings';
+$string['api:use'] = 'acessar esta API';
+$string['api:managecredentials'] = 'gerenciar credenciais de clientes';
+$string['api:manageselfcredentials'] = 'gerenciar suas credenciais de cliente';
+$string['api:config'] = 'alterar as configurações da API';

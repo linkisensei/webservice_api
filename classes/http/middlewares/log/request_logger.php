@@ -17,14 +17,15 @@ class request_logger implements MiddlewareInterface {
 
         try {
             $response = $handler->handle($request);
-            $http_status = $response->getStatusCode();
+            $event->set_http_status($response->getStatusCode());
 
         } catch (Throwable $th) {
             $exception = $th;
             $http_status = ($th instanceof HttpExceptionInterface) ? $th->getStatusCode() : 500;
+            $event->set_http_status($http_status);
+            $event->set_error_message($th->getMessage());
 
         } finally {
-            $event->set_http_status($http_status);
             $event->mark_request_end();
             $event->trigger();
 

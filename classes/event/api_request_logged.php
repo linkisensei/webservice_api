@@ -65,6 +65,11 @@ class api_request_logged extends \core\event\base {
         return $this;
     }
 
+    public function set_error_message(string $error): static {
+        $this->data['other']['error'] = $error;
+        return $this;
+    }
+
     public function set_crud_from_method(string $method): static {
         $this->data['crud'] = match (strtoupper($method)) {
             'GET', 'OPTIONS', 'HEAD' => 'r',

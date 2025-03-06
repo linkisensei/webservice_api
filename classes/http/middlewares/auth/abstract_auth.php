@@ -33,6 +33,7 @@ abstract class abstract_auth implements MiddlewareInterface {
      *
      * @throws moodle_exception
      * @throws auth_failure_exception
+     * @throws required_capability_exception
      * @param object $user
      * @return void
      */
@@ -84,6 +85,8 @@ abstract class abstract_auth implements MiddlewareInterface {
         if ($user->auth=='nologin'){
             throw auth_failure_exception::fromString('wsaccessusernologin', 'webservice')->setReason('login')->setOther($other);
         }
+
+        require_capability('webservice/api:use', \context_system::instance(), $user);
     }
 
     protected function get_bearer_token(ServerRequestInterface $request): ?string {

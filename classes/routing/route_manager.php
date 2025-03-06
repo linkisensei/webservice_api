@@ -20,6 +20,13 @@ class route_manager {
         };
     }
 
+    public static function register_from_function_callbacks(){
+        foreach (get_plugins_with_function('webservice_api_register_routes') as $callback) {
+            self::$route_callbacks[] = $callback; 
+        };
+
+    }
+
     public static function apply_routes(Router $router) {
         foreach (self::$route_callbacks as $callback) {
             $callback($router);

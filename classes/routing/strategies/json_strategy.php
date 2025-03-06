@@ -46,13 +46,19 @@ class json_strategy extends JsonStrategy {
                         return $exception->buildJsonResponse($response);
                     }
 
+                    $status = 500;
+
+                    if($exception instanceof \required_capability_exception){
+                        $status = 401;
+                    }
+
                     $response->getBody()->write(json_encode([
-                        'status'   => 500,
+                        'status'   => $status,
                         'message' => $exception->getMessage()
                     ]));
 
                     $response = $response->withAddedHeader('content-type', 'application/json');
-                    return $response->withStatus(500);
+                    return $response->withStatus($status);
                 }
             }
         };

@@ -30,25 +30,37 @@
         </style>
     </head>
     <body>
-        <h2 id="webservice_api\auth_controller_test">auth_controller_test (webservice_api\auth_controller_test)</h2>
-        <ul>
-            <li style="color: #555753;">✓ Create token with invalid credentials</li>
-            <li style="color: #555753;">✓ Create token with valid credentials</li>
-        </ul>
         <h2 id="webservice_api\config_test">config_test (webservice_api\config_test)</h2>
         <ul>
             <li style="color: #555753;">✓ Instance</li>
             <li style="color: #555753;">✓ Set and get</li>
             <li style="color: #555753;">✓ Generate secrets</li>
         </ul>
-        <h2 id="webservice_api\jwt_token_auth_test">jwt_token_auth_test (webservice_api\jwt_token_auth_test)</h2>
+        <h2 id="webservice_api\external_api_adapter_test">external_api_adapter_test (webservice_api\external_api_adapter_test)</h2>
         <ul>
-            <li style="color: #555753;">✓ Valid token authentication</li>
+            <li style="color: #555753;">✓ Adapter calls external api with complex structure</li>
+            <li style="color: #555753;">✓ Adapter calls external api with invalid structure</li>
+        </ul>
+        <h2 id="webservice_api\oauth_controller_test">oauth_controller_test (webservice_api\oauth_controller_test)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Issue token with invalid password</li>
+            <li style="color: #555753;">✓ Issue token with valid password</li>
+            <li style="color: #555753;">✓ Issue token with valid refresh token</li>
+            <li style="color: #ef2929;">❌ Issue token with valid client credentials</li>
+        </ul>
+        <h2 id="webservice_api\oauth_token_auth_test">oauth_token_auth_test (webservice_api\oauth_token_auth_test)</h2>
+        <ul>
+            <li style="color: #ef2929;">❌ Valid token authentication</li>
             <li style="color: #555753;">✓ Missing token</li>
         </ul>
-        <h2 id="webservice_api\jwt_token_service_test">jwt_token_service_test (webservice_api\jwt_token_service_test)</h2>
+        <h2 id="webservice_api\oauth_token_service_test">oauth_token_service_test (webservice_api\oauth_token_service_test)</h2>
         <ul>
             <li style="color: #555753;">✓ Generate and parse access token</li>
+        </ul>
+        <h2 id="webservice_api\route_manager_test">route_manager_test (webservice_api\route_manager_test)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Plugin routes</li>
+            <li style="color: #555753;">✓ Plugin routes file</li>
         </ul>
     </body>
 </html>
