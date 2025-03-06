@@ -5,6 +5,7 @@ require_once(__DIR__ . '/fixtures/mock_external_api.php');
 require_once(__DIR__ . '/fixtures/traits/mock_request_trait.php');
 
 use \advanced_testcase;
+use \webservice_api\exceptions\api_exception;
 use \webservice_api\routing\adapters\external_api_adapter;
 use \webservice_api\fixtures\traits\mock_request_trait;
 class external_api_adapter_test extends advanced_testcase {
@@ -41,5 +42,34 @@ class external_api_adapter_test extends advanced_testcase {
         $this->assertCount(2, $response['courses']);
         $this->assertEquals(1, $response['courses'][0]['id']);
         $this->assertEquals('Sword', $response['courses'][0]['fullname']);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function test_adapter_calls_external_api_with_invalid_structure() {
+        $this->resetAfterTest(true);
+
+        $request = $this->make_request('POST', '/api/token', [
+            'user' => [
+                'username' => 'testuser'
+            ],
+            'courses' => []
+        ]);
+
+        
+        $adapter = new external_api_adapter(\webservice_api\fixtures\mock_external_api::class, 'mock_method');
+        $uri_params = ['id' => 123];
+
+        $exception = null;
+        try {
+            $adapter($request, $uri_params);
+        } catch (api_exception $ex) {
+            $exception = $ex;
+        }
+
+        $this->assertNotNull($exception);
+        $this->assertEquals(400, $exception->getStatusCode());
+        
     }
 }
