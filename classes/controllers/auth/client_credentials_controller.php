@@ -12,16 +12,8 @@ class client_credentials_controller extends abstract_controller {
         $this->service = new client_credentials_service();
     }
 
-    public function list_clients(ServerRequestInterface $request, array $args = []){
-
-    }
-
     public function create_client(ServerRequestInterface $request){
-
-    }
-
-    public function update_client(ServerRequestInterface $request, array $args = []){
-
+        
     }
 
     public function delete_client(ServerRequestInterface $request, array $args = []){

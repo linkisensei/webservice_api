@@ -50,7 +50,7 @@ class client extends persistent {
         return $this->user;
     }
 
-    public static function get_by_clientid(string $client_id, $throw_exception = true) : ?static {
+    public static function get_by_clientid(string $client_id) : ?static {
         return static::get_record(['clientid' => $client_id]) ?: null;
     }
 
