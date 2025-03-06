@@ -10,6 +10,16 @@ class route_manager {
         self::$route_callbacks[] = $callback;
     }
 
+    public static function register_file(string $path) {
+        if(!file_exists($path)){
+            return;
+        }
+
+        self::$route_callbacks[] = function(Router $router) use ($path){
+            require_once($path);
+        };
+    }
+
     public static function apply_routes(Router $router) {
         foreach (self::$route_callbacks as $callback) {
             $callback($router);
