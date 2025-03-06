@@ -10,7 +10,7 @@ use \League\Route\Http\Exception\HttpExceptionInterface;
 use \Laminas\Diactoros\Response\EmptyResponse;
 
 class cors_middleware implements MiddlewareInterface {
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface{
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
         if ($request->getMethod() === 'OPTIONS') {
             $response = new EmptyResponse(200);
         } else {
