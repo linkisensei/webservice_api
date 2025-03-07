@@ -16,8 +16,8 @@ $router->post('/oauth/token', [oauth_controller::class, 'issue_token']);
 // Auth clients and credentials
 $router->group('/oauth/credentials', function (RouteGroup $route) {
     $route->post('/', [client_credentials_controller::class, 'create_credentials']);
-    $route->patch('/{clientid}', [client_credentials_controller::class, 'update_credentials']);
-    $route->delete('/{clientid}', [client_credentials_controller::class, 'delete_credentials']);
+    $route->patch('/{client_id}', [client_credentials_controller::class, 'update_credentials']);
+    $route->delete('/{client_id}', [client_credentials_controller::class, 'delete_credentials']);
 })->middleware(new oauth_token_auth());
 
 // Current user routes

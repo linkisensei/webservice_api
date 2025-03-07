@@ -12,7 +12,7 @@ class oauth_credentials extends persistent {
     protected static function define_properties() {
         return [
             'client_id' => [
-                'type' => PARAM_INT,
+                'type' => PARAM_RAW,
             ],
             'user_id' => [
                 'type' => PARAM_INT,
@@ -30,7 +30,7 @@ class oauth_credentials extends persistent {
             ],
             'created_at' => [
                 'type' => PARAM_INT,
-                'default' => time(),
+                'default' => 0,
             ],
             'modified_at' => [
                 'type' => PARAM_INT,
@@ -39,12 +39,7 @@ class oauth_credentials extends persistent {
         ];
     }
 
-    /**
-     * @throws \webservice_api\exceptions\api_exception
-     */
-    protected function before_create(){
-        global $USER;
-
+    protected function before_validate(){
         if(empty($this->get('client_id'))){
             $this->raw_set('client_id', self::generate_client_id($this->get('user_id')));
         }
@@ -52,8 +47,15 @@ class oauth_credentials extends persistent {
         if(empty($this->secret)){
             $this->generate_secret();
         }
+    }
 
-        if(static::record_exists(['client_id' => $this->get('client_id')])){
+    /**
+     * @throws \webservice_api\exceptions\api_exception
+     */
+    protected function before_create(){
+        global $USER, $DB;
+
+        if($DB->record_exists(static::TABLE, ['client_id' => $this->get('client_id')])){
             throw new api_exception('Credentials already exist for the specified user', 409);
         }
         
@@ -144,12 +146,12 @@ class oauth_credentials extends persistent {
     public static function get_by_user_id(int $user_id) : ?static {
         return static::get_record([
             'user_id' => $user_id,
-        ]);
+        ]) ?: null;
     }
 
     public static function get_by_client_id(string $client_id) : ?static {
         return static::get_record([
             'client_id' => $client_id,
-        ]);
+        ]) ?: null;
     }
 }

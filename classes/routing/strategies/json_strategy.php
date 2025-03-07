@@ -41,7 +41,7 @@ class json_strategy extends JsonStrategy {
                     return $handler->handle($request);
                 } catch (Throwable $exception) {
                     $response = $this->response;
-
+                    
                     if (is_a($exception, HttpExceptionInterface::class, true)) {
                         return $exception->buildJsonResponse($response);
                     }
