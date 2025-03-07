@@ -1,0 +1,94 @@
+<?php namespace webservice_api\services;
+
+use \context;
+use \webservice_api\config;
+use \webservice_api\models\auth\oauth_credentials;
+use \webservice_api\exceptions\auth_failure_exception;
+use \webservice_api\exceptions\api_exception;
+
+final class oauth_credentials_service {
+    private config $config;
+    private context $context;
+
+    public function __construct(){
+        $this->config = config::instance();
+        $this->context = \context_system::instance();
+    }
+
+    public function get_credentials(string $client_id) : oauth_credentials {
+        if(!$credential = oauth_credentials::get_by_client_id($client_id)){
+            throw new api_exception('Client credentials not found!', 404);
+        }
+        return $credential;
+    }
+
+    /**
+     * Validates oauth client credentials
+     * 
+     * @throws \webservice_api\exceptions\auth_failure_exception
+     * @param string $clientid
+     * @param string $secret
+     * @return client_secret|null
+     */
+    public function validate_credentials(string $clientid, string $secret) : oauth_credentials {
+        if(!$credential = oauth_credentials::validate_credentials($clientid, $secret)){
+            throw new auth_failure_exception('Invalid client credentials', 401);
+        }
+
+        if($credential->is_expired()){
+            throw new auth_failure_exception('Expired client credentials', 401);
+        }
+
+        return $credential;
+    }
+
+    public function generate_credentials(int $user_id, int $expires_at = 0) : oauth_credentials {
+        $this->check_permissions($user_id);
+
+        $credentials = new oauth_credentials(0, (object) [
+            'user_id' => $user_id,
+            'expires_at' => $expires_at,
+        ]);
+
+        $credentials->save();
+        return $credentials;
+    }
+
+    public function regenerate_credentials(string $client_id, int $expires_at = 0) : oauth_credentials {
+        $credentials = $this->get_credentials($client_id);
+        $this->check_permissions((int) $credentials->get('user_id'));
+
+        if($expires_at <= time()){
+            throw new auth_failure_exception('Credentials expiration must be a future timestamp', 400);
+        }
+
+        $credentials->regenerate_secret($expires_at);
+        $credentials->save();
+
+        return $credentials;
+    }
+
+    public function revoke_credentials(string $client_id) : oauth_credentials {
+        $credentials = $this->get_credentials($client_id);
+
+        $this->check_permissions((int) $credentials->get('user_id'));
+        $credentials->delete();
+
+        return $credentials;
+    }
+
+    /**
+     * @throws \required_capability_exception
+     * @param integer $user_id Credentials owner
+     * @return void
+     */
+    protected function check_permissions(int $user_id = 0){
+        global $USER;
+
+        if($USER->id != $user_id){
+            require_capability('webservice/api:managecredentials', $this->context);
+        }else{
+            require_capability('webservice/api:manageselfcredentials', $this->context);
+        }
+    }
+}

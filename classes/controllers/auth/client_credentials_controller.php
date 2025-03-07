@@ -2,7 +2,7 @@
 
 use \Psr\Http\Message\ServerRequestInterface;
 use \webservice_api\controllers\abstract_controller;
-use \webservice_api\services\client_credentials_service;
+use \webservice_api\services\oauth_credentials_service;
 use \webservice_api\http\response\resources\hal_resource;
 use \webservice_api\http\response\transformers\entities\compact_user_transformer;
 use \webservice_api\exceptions\api_exception;
@@ -12,90 +12,59 @@ use \webservice_api\helpers\routing\api_route_helper;
 class client_credentials_controller extends abstract_controller {
     
 
-    protected client_credentials_service $service;
+    protected oauth_credentials_service $service;
 
     public function __construct(){
-        $this->service = new client_credentials_service();
+        $this->service = new oauth_credentials_service();
     }
-
-    public function create_client(ServerRequestInterface $request){
+    
+    public function create_credentials(ServerRequestInterface $request){
         $body = $request->getParsedBody();
 
-        $userid = $this->required_param($body, 'userid', PARAM_INT);
-        $client = $this->service->create_client($userid);
+        $user_id = $this->required_param($body, 'user_id', PARAM_INT);
+        $expires_at = $this->optional_param($body, 'expires_at', PARAM_INT, 0);
 
-        $resource = hal_resource_factory::make_oauth_client_resource($client);
+        $credentials = $this->service->generate_credentials($user_id, $expires_at);
+        $resource = hal_resource_factory::make_oauth_credentials_resource($credentials);
 
-        $user = (new compact_user_transformer())->transform($client->get_user());
+        $user = (new compact_user_transformer())->transform($credentials->get_user());
         $user_resource = hal_resource_factory::make_user_resource($user);
         $resource->embed('user', $user_resource);
 
         return $resource;
     }
 
-    public function get_client(ServerRequestInterface $request, array $args = []){
-        $clientid = $this->required_param($args, 'clientid', PARAM_TEXT);
 
-        $client = $this->service->get_client($clientid);
-        $resource = hal_resource_factory::make_oauth_client_resource($client);
+    public function update_credentials(ServerRequestInterface $request, array $args = []){
+        $body = $request->getParsedBody();
 
-        $user = (new compact_user_transformer())->transform($client->get_user());
+        $client_id = $this->required_param($args, 'client_id', PARAM_ALPHANUMEXT);
+        $expires_at = $this->optional_param($body, 'expires_at', PARAM_INT, 0);
+
+        $credentials = $this->service->regenerate_credentials($client_id, $expires_at);
+        $resource = hal_resource_factory::make_oauth_credentials_resource($credentials);
+
+        $user = (new compact_user_transformer())->transform($credentials->get_user());
         $user_resource = hal_resource_factory::make_user_resource($user);
         $resource->embed('user', $user_resource);
 
         return $resource;
     }
 
-    public function delete_client(ServerRequestInterface $request, array $args = []){
-        $clientid = $this->required_param($args, 'clientid', PARAM_TEXT);
-        $client = $this->service->delete_client($clientid);
-
-        $resource = new hal_resource();
-        $resource->embed('client', [
-            'id' => $client->get('clientid'),
-        ]);
-        return $resource;
-    }
-
-    public function list_client_secrets(ServerRequestInterface $request, array $args = []){
-        $clientid = $this->required_param($args, 'clientid', PARAM_TEXT);
-
-        $client = $this->service->get_client($clientid);
-        $client_secrets = $this->service->list_client_secrets($client);
-        $client_secrets = array_map([hal_resource_factory::class, 'make_oauth_client_resource'], $client_secrets);
-
-        $resource = new hal_resource(['clientid' => $clientid]);
-        $resource->embed('client', hal_resource_factory::make_oauth_client_resource($client));
-        $resource->embed('secrets', $client_secrets);
-
-        return $resource;
-    }
-
-    public function create_client_secret(ServerRequestInterface $request, array $args = []){
+    public function delete_credentials(ServerRequestInterface $request, array $args = []){
         $body = $request->getParsedBody();
 
-        $clientid = $this->required_param($args, 'clientid', PARAM_TEXT);
-        $name = $this->optional_param($body, 'name', PARAM_TEXT, '');
-        $valid_until = $this->optional_param($body, 'validuntil', PARAM_INT, 0);
+        $client_id = $this->required_param($args, 'client_id', PARAM_ALPHANUMEXT);
 
-        $client_secret = $this->service->create_client_secret($clientid, $name, $valid_until);
-        $resource = hal_resource_factory::make_oauth_client_secret_resource($client_secret);
+        $credentials = $this->service->revoke_credentials($client_id);
+        $resource = hal_resource_factory::make_oauth_credentials_resource($credentials);
 
-        return $resource;
-    }
-
-    public function get_client_secret(ServerRequestInterface $request, array $args = []){
-        $clientid = $this->required_param($args, 'clientid', PARAM_TEXT);
-        $secretid = $this->required_param($args, 'secretid', PARAM_TEXT);
-
-        $client_secret = $this->service->get_client_secret($clientid, $secretid);
-        $resource = hal_resource_factory::make_oauth_client_secret_resource($client_secret);
+        $user = (new compact_user_transformer())->transform($credentials->get_user());
+        $user_resource = hal_resource_factory::make_user_resource($user);
+        $resource->embed('user', $user_resource);
 
         return $resource;
     }
 
-    public function delete_client_secret(ServerRequestInterface $request, array $args = []){
-        $clientid = $this->required_param($args, 'clientid', PARAM_TEXT);
-        $secretid = $this->required_param($args, 'secretid', PARAM_TEXT);
-    }
+
 }

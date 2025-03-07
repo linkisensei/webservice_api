@@ -14,17 +14,10 @@ $router->middleware(new \webservice_api\http\middlewares\cors_middleware());
 $router->post('/oauth/token', [oauth_controller::class, 'issue_token']);
 
 // Auth clients and credentials
-$router->group('/oauth/clients', function (RouteGroup $route) {
-    $route->post('/', [client_credentials_controller::class, 'create_client']);
-    $route->get('/{clientid}', [client_credentials_controller::class, 'get_client']);
-    $route->delete('/{clientid}', [client_credentials_controller::class, 'delete_client']);
-
-    $route->get('/{clientid}/secrets', [client_credentials_controller::class, 'list_client_secrets']);
-    $route->get('/{clientid}/secrets/{secretid}', [client_credentials_controller::class, 'get_client_secret']);
-    $route->post('/{clientid}/secrets', [client_credentials_controller::class, 'create_client_secret']);
-    $route->put('/{clientid}/secrets', [client_credentials_controller::class, 'update_client_secret']);
-    $route->delete('/{clientid}/secrets/{secretid}', [client_credentials_controller::class, 'delete_client_secret']);
-
+$router->group('/oauth/credentials', function (RouteGroup $route) {
+    $route->post('/', [client_credentials_controller::class, 'create_credentials']);
+    $route->patch('/{clientid}', [client_credentials_controller::class, 'update_credentials']);
+    $route->delete('/{clientid}', [client_credentials_controller::class, 'delete_credentials']);
 })->middleware(new oauth_token_auth());
 
 // Current user routes

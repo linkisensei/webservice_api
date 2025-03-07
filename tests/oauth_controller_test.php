@@ -9,7 +9,7 @@ use \webservice_api\controllers\auth\oauth_controller;
 use \webservice_api\exceptions\auth_failure_exception;
 use \webservice_api\fixtures\traits\mock_request_trait;
 use \webservice_api\services\oauth_token_service;
-use \webservice_api\services\client_credentials_service;
+use \webservice_api\services\oauth_credentials_service;
 
 
 class oauth_controller_test extends advanced_testcase {
@@ -80,6 +80,11 @@ class oauth_controller_test extends advanced_testcase {
         $this->assertArrayHasKey('expires_in', $response);
     }
 
+    /**
+     * @group current
+     *
+     * @return void
+     */
     public function test_issue_token_with_valid_client_credentials() {   
         $user = $this->getDataGenerator()->create_user([
             'username' => 'testuser01',
@@ -87,14 +92,13 @@ class oauth_controller_test extends advanced_testcase {
             'confirmed' => 1,
         ]);
 
-        $service = new client_credentials_service();
-        $client = $service->create_client($user->id);
-        $secret = $service->create_client_secret($client, 'test-credential');
+        $service = new oauth_credentials_service();
+        $credentials = $service->generate_credentials($user->id);
         
         $request = $this->make_request('POST', '/api/oauth/token', [
             'grant_type' => 'client_credentials',
-            'client_id' => $client->get('clientid'),
-            'client_secret' => $secret->get_secret(),
+            'client_id' => $credentials->get('client_id'),
+            'client_secret' => $credentials->get_secret(),
         ]);
     
         $response = (array) $this->oauth_controller->issue_token($request);

@@ -6,7 +6,7 @@ use \webservice_api\exceptions\auth_failure_exception;
 use \webservice_api\config;
 use \webservice_api\services\oauth_token_service;
 use \webservice_api\controllers\abstract_controller;
-use webservice_api\services\client_credentials_service;
+use webservice_api\services\oauth_credentials_service;
 
 class oauth_controller extends abstract_controller{
 
@@ -100,20 +100,10 @@ class oauth_controller extends abstract_controller{
             throw new auth_failure_exception("Empty client secret", 400);
         }
 
-        $service = new client_credentials_service();
-        if(!$secret = $service->validate_credentials($body['client_id'], $body['client_secret'])){
-            throw new auth_failure_exception('Invalid client credentials', 401);
-        }
+        $service = new oauth_credentials_service();
+        $credentials = $service->validate_credentials($body['client_id'], $body['client_secret']);
 
-        if($secret->is_expired()){
-            throw new auth_failure_exception('Expired client credentials', 401);
-        }
-
-        if(!$client = $secret->get_client_instance()){
-            throw new auth_failure_exception('Invalid client', 401);
-        }
-
-        if(!$user = $client->get_user()){
+        if(!$user = $credentials->get_user()){
             throw new auth_failure_exception('Invalid client user', 401);
         }
 
