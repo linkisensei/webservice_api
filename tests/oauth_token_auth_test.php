@@ -18,8 +18,11 @@ class oauth_token_auth_test extends advanced_testcase {
     protected object $user;
 
     protected function setUp(): void {
+        global $DB;
+
         parent::setUp();
         $this->resetAfterTest();
+        $this->setAdminUser(); 
 
         config::generate_secrets();
         
@@ -31,10 +34,15 @@ class oauth_token_auth_test extends advanced_testcase {
             'deleted' => 0,
             'policyagreed' => 1
         ]);
+
+        // Making sure the user has "webservice/api:use"
+        $manager = $DB->get_record('role', array('shortname' => 'manager'), '*', MUST_EXIST);
+        role_assign($manager->id, $this->user->id, \context_system::instance()->id); 
         
         $this->token_service = new oauth_token_service();
         $this->middleware = new oauth_token_auth();
     }
+
 
     public function test_valid_token_authentication() {
         global $USER;

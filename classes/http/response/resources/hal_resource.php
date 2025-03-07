@@ -1,6 +1,6 @@
-<?php namespace webservice_api\http\response;
+<?php namespace webservice_api\http\response\resources;
 
-use \webservice_api\http\response\api_resource;
+use \webservice_api\http\response\resources\api_resource;
 
 /**
  * Class hal_resource
@@ -20,12 +20,12 @@ class hal_resource extends api_resource {
     public function jsonSerialize(): mixed {
         $response = $this->attributes;
 
-        if (!empty($this->links)) {
-            $response['_links'] = $this->links;
-        }
-
-        if (!empty($this->embedded)) {
+        if(!empty($this->embedded)){
             $response['_embedded'] = $this->embedded;
+        }
+        
+        if(!empty($this->links)){
+            $response['_links'] = $this->links;
         }
 
         return $response;

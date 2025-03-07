@@ -6,6 +6,7 @@ use \webservice_api\models\auth\client;
 use \webservice_api\models\auth\client_secret;
 use \webservice_api\exceptions\api_exception;
 
+
 final class client_credentials_service {
     private config $config;
     private context $context;
@@ -63,7 +64,11 @@ final class client_credentials_service {
 
     public function list_client_secrets(string|client $client) : array {
         $client = $this->get_client_and_check_permissions($client);
-        return $client->get_secrets();
+        $secrets = $client->get_secrets();
+        foreach ($secrets as $secret) {
+            $secret->set_client_instance($client);
+        }
+        return $secrets;
     }
 
     public function create_client_secret(string|client $client, string $name = '', int $valid_until = 0) : client_secret {

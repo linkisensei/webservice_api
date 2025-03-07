@@ -1,4 +1,4 @@
-<?php namespace webservice_api\http\response;
+<?php namespace webservice_api\http\response\resources;
 
 use \JsonSerializable;
 
@@ -17,8 +17,12 @@ abstract class api_resource implements JsonSerializable {
         return $this;
     }
 
-    public function add_link(string $rel, string $href, array $attributes = []): self {
-        $this->links[$rel] = array_merge(['href' => $href], $attributes);
+    public function get_attribute(string $key): mixed {
+        return $this->attributes[$key] ?? null;
+    }
+
+    public function add_link(string $rel, string $href, string $method = 'GET', array $attributes = []): self {
+        $this->links[$rel] = array_merge(['href' => $href, 'method' => strtoupper($method)], $attributes);
         return $this;
     }
 

@@ -11,11 +11,7 @@ use \Laminas\Diactoros\Response\EmptyResponse;
 
 class cors_middleware implements MiddlewareInterface {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
-        if ($request->getMethod() === 'OPTIONS') {
-            $response = new EmptyResponse(200);
-        } else {
-            $response = $handler->handle($request);
-        }
+        $response = $handler->handle($request);
 
         return $response
             ->withHeader('Access-Control-Allow-Origin', '*')

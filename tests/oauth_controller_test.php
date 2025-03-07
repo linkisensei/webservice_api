@@ -26,11 +26,7 @@ class oauth_controller_test extends advanced_testcase {
         $this->oauth_controller = new oauth_controller();
     }
 
-    /**
-     * @group current
-     *
-     * @return void
-     */
+
     public function test_issue_token_with_invalid_password() {
         $request = $this->make_request('POST', '/api/oauth/token', [
             'username' => 'invalid',
@@ -41,11 +37,6 @@ class oauth_controller_test extends advanced_testcase {
         $this->oauth_controller->issue_token($request);
     }
 
-    /**
-     * @group current
-     *
-     * @return void
-     */
     public function test_issue_token_with_valid_password() {
         $user = $this->getDataGenerator()->create_user([
             'username' => 'testuser01',
@@ -66,11 +57,7 @@ class oauth_controller_test extends advanced_testcase {
         $this->assertArrayHasKey('expires_in', $response);
     }
 
-    /**
-     * @group current
-     *
-     * @return void
-     */
+
     public function test_issue_token_with_valid_refresh_token() {
         $token_service = new oauth_token_service();
     
@@ -93,11 +80,6 @@ class oauth_controller_test extends advanced_testcase {
         $this->assertArrayHasKey('expires_in', $response);
     }
 
-    /**
-     * @group current
-     *
-     * @return void
-     */
     public function test_issue_token_with_valid_client_credentials() {   
         $user = $this->getDataGenerator()->create_user([
             'username' => 'testuser01',

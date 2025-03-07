@@ -37,6 +37,10 @@ class client_secret extends persistent {
         if(empty($this->secret)){
             $this->generate_client_secret();
         }
+
+        if(empty($this->get('secretid'))){
+            $this->generate_secretid();
+        }
     }
 
 
@@ -55,17 +59,22 @@ class client_secret extends persistent {
         return $expiration <= time();
     }
 
-    public function set_client(client $client) : static {
+    public function set_client_instance(client $client) : static {
         $this->client = $client;
         return $this;
     }
 
-    public function get_client() : ?client {
+    public function get_client_instance() : ?client {
         if(isset($this->client)){
             return $this->client;
         }
 
         return client::get_record(['id' => $this->get('client')]) ?: null;
+    }
+
+    public function generate_secretid() : static {
+        $this->raw_set('secretid', str_replace('-', '', \core\uuid::generate()));
+        return $this;
     }
 
     /**
@@ -111,13 +120,13 @@ class client_secret extends persistent {
             $sql = "SELECT cs.*
                 FROM $secrets_table cs
                 WHERE cs.client = :clientid
-                    AND cs.secret = :secrethash";
+                    AND cs.secrethash = :secrethash";
         }else{
             $sql = "SELECT cs.*
                 FROM $clients_table c
                     JOIN $secrets_table cs
                 WHERE c.clientid = :clientid
-                    AND cs.secret = :secrethash";
+                    AND cs.secrethash = :secrethash";
         }
 
         if($record = $DB->get_record_sql($sql, $params)){
@@ -129,6 +138,6 @@ class client_secret extends persistent {
     public static function create_from_client(client $client, array|object $data = []){
         $data = (object) $data;
         $data->client = $client->get('id');
-        return (new static(0, $data))->set_client($client);
+        return (new static(0, $data))->set_client_instance($client);
     }
 }

@@ -33,12 +33,13 @@ class client extends persistent {
 
     protected function before_validate() {
         if(empty($this->get('clientid'))){
-            $this->raw_set('clientid', self::generate_clientid());
+            $this->generate_clientid();
         }
     }
 
-    public static function generate_clientid() : string {
-        return str_replace('-', '', \core\uuid::generate());
+    public function generate_clientid() : static {
+        $this->raw_set('clientid', str_replace('-', '', \core\uuid::generate()));
+        return $this;
     }
 
     public function get_user() : ?object {

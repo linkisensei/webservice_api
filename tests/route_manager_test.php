@@ -7,11 +7,6 @@ use \webservice_api\routing\route_manager;
 
 class route_manager_test extends advanced_testcase {
 
-    /**
-     * @group current
-     *
-     * @return void
-     */
     public static function test_plugin_routes(){
         $router = new Router();
 
@@ -26,11 +21,6 @@ class route_manager_test extends advanced_testcase {
         $router->getNamedRoute('mocked.route');
     }
 
-    /**
-     * @group current
-     *
-     * @return void
-     */
     public static function test_plugin_routes_file(){
         global $CFG;
 

@@ -31,7 +31,7 @@ class api_exception extends Exception implements HttpExceptionInterface {
             ]));
         }
 
-        return $response->withStatus($this->status, $this->message);
+        return $response->withStatus($this->status);
     }
 
     public function setHeaders(array $headers) : static {

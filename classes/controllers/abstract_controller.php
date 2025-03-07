@@ -1,25 +1,50 @@
 <?php namespace webservice_api\controllers;
 
 use \moodle_url;
+use \Psr\Http\Message\ServerRequestInterface;
+use \webservice_api\exceptions\api_exception;
 
 abstract class abstract_controller {
-    protected const RESOURCE_PATH = ''; // Should be overriden by children
 
     /**
-     * Returns the full resource URI
+     * Retrieves a required parameter from the provided source array.
+     * Throws an exception if the parameter is missing.
      *
-     * @param string $relative Additional relative path
-     * @return string Full URI
+     * @param array $source The array containing parameters
+     * @param string $key The parameter key
+     * @param string $type The expected type of the parameter
+     * @return mixed The cleaned parameter value
+     * @throws api_exception If the required parameter is missing
      */
-    protected function get_resource_uri(string $relative = ''): string {
-        $relative = trim($relative, '/');
-
-        if($path = trim(static::RESOURCE_PATH, '/')){
-            $url = new moodle_url("/webservice/api/{$path}/{$relative}");
-        }else{
-            $url = new moodle_url("/webservice/api/{$relative}");
+    protected function required_param(array $source, string $key, string $type): mixed {
+        if (!isset($source[$key])) {
+            throw new api_exception("Missing required \"$key\"", 400);
         }
-        
-        return $url->out(false);
+
+        return clean_param($source[$key], $type);
+    }
+
+    /**
+     * Retrieves an optional parameter from the provided source array.
+     * Returns the default value if the parameter is missing or empty.
+     *
+     * @param array $source The array containing parameters
+     * @param string $key The parameter key
+     * @param string $type The expected type of the parameter
+     * @param mixed $default The default value to return if the parameter is missing or empty
+     * @return mixed The cleaned parameter value or default
+     */
+    protected function optional_param(array $source, string $key, string $type, $default = null): mixed {
+        if (!isset($source[$key])) {
+            return $default;
+        }
+
+        $cleaned = clean_param($source[$key], $type);
+
+        if (empty($cleaned) && $default !== null) {
+            return $default;
+        }
+
+        return $cleaned;
     }
 }

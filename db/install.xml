@@ -43,5 +43,20 @@
         <INDEX NAME="idx_clientid" UNIQUE="true" FIELDS="clientid"/>
       </INDEXES>
     </TABLE>
+    <TABLE NAME="webservice_api_ratelimit" COMMENT="Stores rate limit data per user and identifier">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="identifier" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="requests" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="lastreset" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="idx_user_identifier" UNIQUE="false" FIELDS="identifier, userid"/>
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>

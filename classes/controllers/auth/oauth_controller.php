@@ -109,7 +109,7 @@ class oauth_controller extends abstract_controller{
             throw new auth_failure_exception('Expired client credentials', 401);
         }
 
-        if(!$client = $secret->get_client()){
+        if(!$client = $secret->get_client_instance()){
             throw new auth_failure_exception('Invalid client', 401);
         }
 
