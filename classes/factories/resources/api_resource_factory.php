@@ -1,9 +1,10 @@
 <?php namespace webservice_api\factories\resources;
 
-use \moodle_url;
 use \webservice_api\http\response\resources\api_resource;
 use \webservice_api\helpers\routing\api_route_helper;
 use \webservice_api\models\auth\oauth_credentials;
+use \webservice_api\http\response\transformers\entities\oauth_credentials_transformer;
+use \webservice_api\http\response\transformers\entities\compact_user_transformer;
 
 class api_resource_factory {
     protected static function make_resource(array|object $attributes = []) : api_resource {
@@ -11,34 +12,25 @@ class api_resource_factory {
     }
 
     public static function make_user_resource(array|object $user) : api_resource {
-        $user = (array) $user;
-        $user['id'] = (int) $user['id'];
         $resource = static::make_resource($user);
         return $resource;
     }
 
-    public static function make_oauth_credentials_resource(oauth_credentials $secret) : api_resource {
-        $record = $secret->to_record();
+    public static function make_oauth_credentials_resource(oauth_credentials $credentials) : api_resource {
+        $credentials_transformer = new oauth_credentials_transformer();
+        $resource = static::make_resource($credentials_transformer->transform($credentials));
 
-        unset($record->id);
-        unset($record->user_id);
-        unset($record->secret_hash);
-        unset($record->modified_by);
-
-        unset($record->timecreated); // Colateral effect of persistent
-        unset($record->timemodified); // Colateral effect of persistent
-        unset($record->usermodified); // Colateral effect of persistent
-
-        if($secret_raw = $secret->get_secret()){
-            $record->client_secret = $secret_raw;
+        // Embedding user
+        if($user = $credentials->get_user()){
+            $user_transformer = new compact_user_transformer();
+            $user_resource = static::make_user_resource($user_transformer->transform($credentials->get_user()));
+            $resource->embed('user', $user_resource);
         }
 
-        $resource = static::make_resource($record);
-
         // Adding links
-        $uri = api_route_helper::get_api_absolute_uri("/credentials/$record->client_id");
+        $uri = api_route_helper::get_api_absolute_uri('/credentials/' . $credentials->get('client_id'));
 
-        $resource->add_link('self', $uri, 'GET');
+        // $resource->add_link('self', $uri, 'GET');
         $resource->add_link('regenerate', $uri, 'PATCH');
         $resource->add_link('revoke', $uri, 'DELETE');
 

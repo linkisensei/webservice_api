@@ -34,6 +34,7 @@ class compact_user_transformer extends abstract_data_transformer {
         }
 
         $user = is_object($data) ? (array) clone $data : $data;
+        $user['id'] = (int) $user['id'];
         return array_intersect_key($user, $this->allowed_keys);
     }
 }
