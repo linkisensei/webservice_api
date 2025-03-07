@@ -2,14 +2,12 @@
 
 use \League\Route\Strategy\JsonStrategy;
 use \Laminas\Diactoros\ResponseFactory;
-
 use \Psr\Http\Server\MiddlewareInterface;
-
-use \Throwable;
 use \Psr\Http\Server\RequestHandlerInterface;
 use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
-use \League\Route\Http\Exception\HttpExceptionInterface;
+use \Throwable;
+use \webservice_api\handlers\exception_handler;
 
 class json_strategy extends JsonStrategy {
     
@@ -22,14 +20,11 @@ class json_strategy extends JsonStrategy {
      *
      * @return MiddlewareInterface
      */
-    public function getThrowableHandler(): MiddlewareInterface
-    {
-        return new class ($this->responseFactory->createResponse()) implements MiddlewareInterface
-        {
+    public function getThrowableHandler(): MiddlewareInterface {
+        return new class ($this->responseFactory->createResponse()) implements MiddlewareInterface {
             protected $response;
 
-            public function __construct(ResponseInterface $response)
-            {
+            public function __construct(ResponseInterface $response) {
                 $this->response = $response;
             }
 
@@ -40,25 +35,7 @@ class json_strategy extends JsonStrategy {
                 try {
                     return $handler->handle($request);
                 } catch (Throwable $exception) {
-                    $response = $this->response;
-                    
-                    if (is_a($exception, HttpExceptionInterface::class, true)) {
-                        return $exception->buildJsonResponse($response);
-                    }
-
-                    $status = 500;
-
-                    if($exception instanceof \required_capability_exception){
-                        $status = 401;
-                    }
-
-                    $response->getBody()->write(json_encode([
-                        'status'   => $status,
-                        'message' => $exception->getMessage()
-                    ]));
-
-                    $response = $response->withAddedHeader('content-type', 'application/json');
-                    return $response->withStatus($status);
+                    return exception_handler::handle($exception, $this->response);
                 }
             }
         };
