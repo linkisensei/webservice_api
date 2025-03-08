@@ -6,9 +6,9 @@ $string['pluginname'] = 'REST API';
 
 
 $string['event:api_auth_failed'] = 'API authentication failed';
-$string['event:oauth2_credentials_created'] = 'Oauth credentials created';
-$string['event:oauth2_credentials_updated'] = 'Oauth credentials updated';
-$string['event:oauth2_credentials_deleted'] = 'Oauth credentials deleted';
+$string['event:oauth2_credentials_created'] = 'Oauth2 credentials created';
+$string['event:oauth2_credentials_updated'] = 'Oauth2 credentials updated';
+$string['event:oauth2_credentials_deleted'] = 'Oauth2 credentials deleted';
 
 
 $string['settings:manage_title'] = 'Manage REST API';
@@ -36,3 +36,14 @@ $string['docs:bearer_auth_jwt_description'] = 'JWT access token must be included
 $string['exception:invalid_access_token_secret'] = 'Access token secret not configured';
 $string['exception:missing_grant_type'] = "Missing grant_type";
 $string['exception:invalid_user_credentials'] = "Invalid user credentials";
+$string['exception:missing_required_key'] = 'Missing required \"$a\"';
+$string['exception:empty_key'] = 'Empty \"$a\"';
+$string['exception:invalid_key'] = 'Invalid $a';
+$string['exception:invalid_client_user'] = 'Invalid client user';
+$string['exception:user_not_found'] = 'User not found';
+$string['exception:user_not_confirmed'] = 'User not confirmed';
+$string['exception:policy_not_agreed'] = 'Policy not agreed';
+$string['exception:client_credentials_not_found'] = 'Client credentials not found!';
+$string['exception:invalid_client_credentials'] = "Invalid client credentials";
+$string['exception:expired_client_credentials'] = "Expired client credentials";
+$string['exception:invalid_credentials_expiration'] = "Credentials expiration must be a future timestamp";

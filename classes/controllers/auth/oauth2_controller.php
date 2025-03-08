@@ -2,6 +2,7 @@
 
 use \Psr\Http\Message\ServerRequestInterface;
 use \moodle_database;
+use \webservice_api\exceptions\api_exception;
 use \webservice_api\exceptions\auth_failure_exception;
 use \webservice_api\config;
 use \webservice_api\services\oauth2_token_service;
@@ -50,18 +51,18 @@ class oauth2_controller extends abstract_controller{
             return self::GRANT_REFRESH_TOKEN;
         }
 
-        throw new auth_failure_exception('Missing grant_type', 400);
+        throw auth_failure_exception::fromString('exception:missing_grant_type', 'webservice_api')->setStatusCode(400);
     }
 
     protected function get_user_for_password_grant(ServerRequestInterface $request) : object {
         $body = $request->getParsedBody();
 
         if(empty($body['username'])){
-            throw new auth_failure_exception("Empty username", 400);
+            throw api_exception::fromString('exception:empty_key', 'webservice_api', 'username')->setStatusCode(400);
         }
 
         if(empty($body['password'])){
-            throw new auth_failure_exception("Empty password", 400);
+            throw api_exception::fromString('exception:empty_key', 'webservice_api', 'password')->setStatusCode(400);
         }
         
         $user = $this->db->get_record('user', [
@@ -71,7 +72,7 @@ class oauth2_controller extends abstract_controller{
         ]);
 
         if(!$user || !validate_internal_user_password($user, $body['password'])){
-            throw new auth_failure_exception("Invalid user credentials", 401);
+            throw auth_failure_exception::fromString('exception:invalid_key', 'webservice_api', 'username')->setStatusCode(401);
         }
 
         return $user;
@@ -93,7 +94,7 @@ class oauth2_controller extends abstract_controller{
             return $user;
 
         } catch (\Throwable $th) {
-            throw new auth_failure_exception('Invalid refresh token', 401);
+            throw auth_failure_exception::fromString('exception:invalid_key', 'webservice_api', 'refresh_token')->setStatusCode(401);
         }
     }
 
@@ -101,18 +102,18 @@ class oauth2_controller extends abstract_controller{
         $body = $request->getParsedBody();
 
         if(empty($body['client_id'])){
-            throw new auth_failure_exception("Empty client id", 400);
+            throw api_exception::fromString('exception:empty_key', 'webservice_api', 'client_id')->setStatusCode(400);
         }
 
         if(empty($body['client_secret'])){
-            throw new auth_failure_exception("Empty client secret", 400);
+            throw api_exception::fromString('exception:empty_key', 'webservice_api', 'client_secret')->setStatusCode(400);
         }
 
         $service = new oauth2_credentials_service();
         $credentials = $service->validate_credentials($body['client_id'], $body['client_secret']);
 
         if(!$user = $credentials->get_user()){
-            throw new auth_failure_exception('Invalid client user', 401);
+            throw auth_failure_exception::fromString('exception:invalid_client_user', 'webservice_api')->setStatusCode(401);
         }
 
         return $user;
@@ -122,16 +123,16 @@ class oauth2_controller extends abstract_controller{
         global $CFG;
 
         if(empty($user) || (bool) $user->deleted){
-            throw new auth_failure_exception("User not found", 401);
+            throw auth_failure_exception::fromString('exception:user_not_found', 'webservice_api')->setStatusCode(401);
         }
 
         if(!$user->confirmed){
-            throw new auth_failure_exception("User not confirmed", 401);
+            throw auth_failure_exception::fromString('exception:user_not_confirmed', 'webservice_api')->setStatusCode(401);
         }
 
         $has_policy = $CFG->sitepolicy || $CFG->sitepolicyguest;
         if($has_policy && !$user->policyagreed){
-            throw new auth_failure_exception("Policy not agreed", 401);
+            throw auth_failure_exception::fromString('exception:policy_not_agreed', 'webservice_api')->setStatusCode(401);
         }
     }
 
@@ -152,7 +153,7 @@ class oauth2_controller extends abstract_controller{
         path: "/oauth2/token",
         summary: new lang_string("docs:post_oauth2_token_summary", "webservice_api"),
         description: new lang_string("docs:post_oauth2_token_description", "webservice_api"),
-        tags: ["OAuth"],
+        tags: ["OAuth2"],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(

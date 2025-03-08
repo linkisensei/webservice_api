@@ -14,7 +14,7 @@ class oauth2_credentials_updated extends \core\event\base {
      */
     protected function init() {
         $this->data['objecttable'] = 'webservice_api_credentials';
-        $this->data['crud'] = 'u';
+        $this->data['crud'] = 'w';
         $this->data['edulevel'] = self::LEVEL_OTHER;
     }
 

@@ -6,7 +6,6 @@ use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \Psr\Http\Server\MiddlewareInterface;
 use \Psr\Http\Server\RequestHandlerInterface;
-use \Laminas\Diactoros\Response\JsonResponse;
 use \webservice_api\exceptions\api_exception;
 use \webservice_api\exceptions\auth_failure_exception;
 
@@ -49,7 +48,7 @@ abstract class abstract_auth implements MiddlewareInterface {
         // Cannot authenticate unless maintenance access is granted.
         if (!empty($CFG->maintenance_enabled)){
             if(!has_capability('moodle/site:maintenanceaccess', context_system::instance(), $user)){
-                throw new api_exception('sitemaintenance', 'admin');
+                throw api_exception::fromString('sitemaintenance', 'admin');
             }
         }
 

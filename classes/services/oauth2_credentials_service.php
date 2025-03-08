@@ -17,7 +17,7 @@ final class oauth2_credentials_service {
 
     public function get_credentials(string $client_id) : oauth2_credentials {
         if(!$credential = oauth2_credentials::get_by_client_id($client_id)){
-            throw new api_exception('Client credentials not found!', 404);
+            throw api_exception::fromString('exception:client_credentials_not_found', 'webservice_api', 404);
         }
         return $credential;
     }
@@ -32,11 +32,11 @@ final class oauth2_credentials_service {
      */
     public function validate_credentials(string $clientid, string $secret) : oauth2_credentials {
         if(!$credential = oauth2_credentials::validate_credentials($clientid, $secret)){
-            throw new auth_failure_exception('Invalid client credentials', 401);
+            throw auth_failure_exception::fromString('exception:invalid_client_credentials', 'webservice_api', 401);
         }
 
         if($credential->is_expired()){
-            throw new auth_failure_exception('Expired client credentials', 401);
+            throw auth_failure_exception::fromString('exception:expired_client_credentials', 'webservice_api', 401);
         }
 
         return $credential;
@@ -59,7 +59,8 @@ final class oauth2_credentials_service {
         $this->check_permissions((int) $credentials->get('user_id'));
 
         if($expires_at <= time()){
-            throw new auth_failure_exception('Credentials expiration must be a future timestamp', 400);
+            throw api_exception::fromString('exception:invalid_credentials_expiration', 'webservice_api', 400);
+
         }
 
         $credentials->regenerate_secret($expires_at);
