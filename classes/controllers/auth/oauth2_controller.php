@@ -51,18 +51,18 @@ class oauth2_controller extends abstract_controller{
             return self::GRANT_REFRESH_TOKEN;
         }
 
-        throw auth_failure_exception::fromString('exception:missing_grant_type', 'webservice_api')->setStatusCode(400);
+        throw auth_failure_exception::fromApiString('exception:missing_grant_type')->setStatusCode(400);
     }
 
     protected function get_user_for_password_grant(ServerRequestInterface $request) : object {
         $body = $request->getParsedBody();
 
         if(empty($body['username'])){
-            throw api_exception::fromString('exception:empty_key', 'webservice_api', 'username')->setStatusCode(400);
+            throw api_exception::fromApiString('exception:empty_key', 'username')->setStatusCode(400);
         }
 
         if(empty($body['password'])){
-            throw api_exception::fromString('exception:empty_key', 'webservice_api', 'password')->setStatusCode(400);
+            throw api_exception::fromApiString('exception:empty_key', 'password')->setStatusCode(400);
         }
         
         $user = $this->db->get_record('user', [
@@ -72,7 +72,7 @@ class oauth2_controller extends abstract_controller{
         ]);
 
         if(!$user || !validate_internal_user_password($user, $body['password'])){
-            throw auth_failure_exception::fromString('exception:invalid_key', 'webservice_api', 'username')->setStatusCode(401);
+            throw auth_failure_exception::fromApiString('exception:invalid_key', 'username')->setStatusCode(401);
         }
 
         return $user;
@@ -94,7 +94,7 @@ class oauth2_controller extends abstract_controller{
             return $user;
 
         } catch (\Throwable $th) {
-            throw auth_failure_exception::fromString('exception:invalid_key', 'webservice_api', 'refresh_token')->setStatusCode(401);
+            throw auth_failure_exception::fromApiString('exception:invalid_key', 'refresh_token')->setStatusCode(401);
         }
     }
 
@@ -102,18 +102,18 @@ class oauth2_controller extends abstract_controller{
         $body = $request->getParsedBody();
 
         if(empty($body['client_id'])){
-            throw api_exception::fromString('exception:empty_key', 'webservice_api', 'client_id')->setStatusCode(400);
+            throw api_exception::fromApiString('exception:empty_key', 'client_id')->setStatusCode(400);
         }
 
         if(empty($body['client_secret'])){
-            throw api_exception::fromString('exception:empty_key', 'webservice_api', 'client_secret')->setStatusCode(400);
+            throw api_exception::fromApiString('exception:empty_key', 'client_secret')->setStatusCode(400);
         }
 
         $service = new oauth2_credentials_service();
         $credentials = $service->validate_credentials($body['client_id'], $body['client_secret']);
 
         if(!$user = $credentials->get_user()){
-            throw auth_failure_exception::fromString('exception:invalid_client_user', 'webservice_api')->setStatusCode(401);
+            throw auth_failure_exception::fromApiString('exception:invalid_client_user')->setStatusCode(401);
         }
 
         return $user;
@@ -123,16 +123,16 @@ class oauth2_controller extends abstract_controller{
         global $CFG;
 
         if(empty($user) || (bool) $user->deleted){
-            throw auth_failure_exception::fromString('exception:user_not_found', 'webservice_api')->setStatusCode(401);
+            throw auth_failure_exception::fromApiString('exception:user_not_found')->setStatusCode(401);
         }
 
         if(!$user->confirmed){
-            throw auth_failure_exception::fromString('exception:user_not_confirmed', 'webservice_api')->setStatusCode(401);
+            throw auth_failure_exception::fromApiString('exception:user_not_confirmed')->setStatusCode(401);
         }
 
         $has_policy = $CFG->sitepolicy || $CFG->sitepolicyguest;
         if($has_policy && !$user->policyagreed){
-            throw auth_failure_exception::fromString('exception:policy_not_agreed', 'webservice_api')->setStatusCode(401);
+            throw auth_failure_exception::fromApiString('exception:policy_not_agreed')->setStatusCode(401);
         }
     }
 
@@ -225,7 +225,7 @@ class oauth2_controller extends abstract_controller{
             self::GRANT_PASSWORD => $this->get_user_for_password_grant($request),
             self::GRANT_REFRESH_TOKEN => $this->get_user_for_refresh_token_grant($request),
             self::GRANT_CLIENT_CREDENTIALS => $this->get_user_for_client_credentials_grant($request),
-            default => throw auth_failure_exception::fromString('exception:missing_grant_type', "webservice_api")->setStatusCode(400),
+            default => throw auth_failure_exception::fromApiString('exception:missing_grant_type')->setStatusCode(400),
         };
         
         $this->validate_user($user);

@@ -51,7 +51,7 @@ final class config {
             return $secret;
         }
 
-        throw api_exception::fromString('exception:invalid_access_token_secret',self::PLUGIN_NAME);
+        throw api_exception::fromApiString('exception:invalid_access_token_secret');
     }
 
     public function get_jwt_access_token_ttl() : int {
@@ -64,6 +64,11 @@ final class config {
 
     public function get_jwt_refresh_token_ttl() : int {
         return $this->get(self::SETTING_JWT_REFRESH_TTL, DAYSECS);
+    }
+
+    public function get_docs_language() : string {
+        global $CFG;
+        return $CFG->lang;
     }
 
     /**

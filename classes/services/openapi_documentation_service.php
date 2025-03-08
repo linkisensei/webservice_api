@@ -2,6 +2,7 @@
 
 use \webservice_api\helpers\routing\api_route_helper;
 use \webservice_api\routing\route_manager;
+use \webservice_api\exceptions\api_exception;
 use \webservice_api\routing\adapters\external_api_adapter;
 use \OpenApi\Generator;
 use \League\Route\Router;
@@ -9,6 +10,8 @@ use \ReflectionClass;
 use \ReflectionProperty;
 use \ReflectionFunction;
 use \Closure;
+use \cache;
+use \webservice_api\config;
 
 /**
  * Service responsible for generating OpenAPI documentation for the webservice API.
@@ -27,6 +30,14 @@ class openapi_documentation_service {
     const FORMAT_JSON = 'json';
     const FORMAT_YAML = 'yaml';
 
+    const CACHE_AREA = 'openapi';
+
+    public function validate_format(string $format){
+        if(!in_array($format, [self::FORMAT_JSON, self::FORMAT_YAML])){
+            throw api_exception::fromApiString('exception:invalid_openapi_format')->setStatusCode(400);
+        }
+    }
+
     public function get_content_type(string $format = self::FORMAT_JSON){
         switch ($format) {
             case self::FORMAT_YAML:
@@ -37,10 +48,31 @@ class openapi_documentation_service {
         }
     }
 
-    public function generate(string $format = self::FORMAT_JSON): string {
-        raise_memory_limit(MEMORY_HUGE);
+    /**
+     * Returns the content of a openapi file.
+     *
+     * @param string $format
+     * @return string
+     */
+    public function get(string $format = self::FORMAT_JSON) : string {
+        $this->validate_format($format);
 
-        // opcache_reset();
+        $cache = cache::make('webservice_api', self::CACHE_AREA);
+        
+        if($cached = $cache->get($format)){
+            return $cached;
+        }
+
+        $content = $this->generate($format);
+        $cache->set($format, $content);
+
+        return $content;
+    }
+
+    protected function generate(string $format = self::FORMAT_JSON): string {
+        $previous_language = force_current_language(config::instance()->get_docs_language());
+
+        raise_memory_limit(MEMORY_HUGE);
 
         $router = $this->initialize_router();
         $routes = $this->get_all_routes($router);
@@ -61,6 +93,8 @@ class openapi_documentation_service {
                 'description' => '',
             ])
         ];
+
+        force_current_language($previous_language);
 
         switch ($format) {
             case self::FORMAT_YAML:

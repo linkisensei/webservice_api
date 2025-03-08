@@ -23,9 +23,7 @@ $router = new \League\Route\Router();
 $router->setStrategy(\webservice_api\routing\strategies\json_strategy::factory());
 
 // Loading routes
-require_once(__DIR__ . '/routes.php');
-
-// Loading other plugins routes
+\webservice_api\routing\route_manager::register_local_routes($router);
 \webservice_api\routing\route_manager::register_from_function_callbacks();
 \webservice_api\routing\route_manager::apply_routes($router);
 

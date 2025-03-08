@@ -19,7 +19,7 @@ class openapi_controller extends abstract_controller {
 
     public function get_openapi_file(ServerRequestInterface $request, array $args = []){
         $format = $this->optional_param($args, 'format', PARAM_TEXT, $this->service::FORMAT_JSON);
-        $content = $this->service->generate($format);
+        $content = $this->service->get($format);
         $response = new TextResponse($content);
         return $response->withHeader('Content-Type', $this->service->get_content_type($format));
     }

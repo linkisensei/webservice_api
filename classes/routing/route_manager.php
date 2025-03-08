@@ -16,8 +16,13 @@ class route_manager {
         }
 
         self::$route_callbacks[] = function(Router $router) use ($path){
-            require_once($path);
+            require($path);
         };
+    }
+
+    public static function register_local_routes(Router $router){
+        global $CFG;
+        require($CFG->dirroot . '/webservice/api/routes.php');
     }
 
     public static function register_from_function_callbacks(){

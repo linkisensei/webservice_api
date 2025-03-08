@@ -25,7 +25,7 @@ abstract class abstract_controller {
      */
     protected function required_param(array $source, string $key, string $type): mixed {
         if (!isset($source[$key])) {
-            throw api_exception::fromString('exception:missing_required_key', 'webservice_api', $key)->setStatusCode( 400);
+            throw api_exception::fromApiString('exception:missing_required_key', $key)->setStatusCode(400);
         }
 
         return clean_param($source[$key], $type);
