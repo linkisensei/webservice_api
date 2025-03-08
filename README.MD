@@ -34,7 +34,7 @@ This plugin provides a RESTful webservice API for Moodle, implementing OAuth2 au
    - Set the JWT secret keys and token expiration values
    - Enable the required authentication methods
 
-### 🔄 Webserver Configuration
+### 🗄️ Webserver Configuration
 
 To properly handle API requests, your webserver must be configured to route all non-static requests to `index.php`.
 
@@ -161,7 +161,7 @@ route_manager::register(function($router){
 route_manager::register_file('path/to/routes.php')
 ```
 
-### 🔄 Using the External API Adapter
+### </> Using the External API Adapter
 
 To expose Moodle's native `external_api` functions via the `webservice_api`, you can use the `external_api_adapter`. This adapter allows you to map Moodle's built-in web service functions to API routes without manually defining request handling logic.
 
