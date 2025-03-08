@@ -7,7 +7,7 @@ require_once(__DIR__ . '/classes/handlers/error_handler.php');
 \webservice_api\handlers\error_handler::register();
 
 // Loading libraries and core
-require_once(__DIR__ . '/vendor/autoload.php');
+require_once(__DIR__ . '/bootstrap.php');
 require_once(__DIR__ . '/../../config.php');
 
 // Exception Handler
@@ -17,7 +17,7 @@ require_once(__DIR__ . '/../../config.php');
 $request = \webservice_api\factories\request_factory::from_globals();
 
 // Initiating router
-$router = new \League\Route\Router;
+$router = new \League\Route\Router();
 
 // Setting JSON Strategy
 $router->setStrategy(\webservice_api\routing\strategies\json_strategy::factory());

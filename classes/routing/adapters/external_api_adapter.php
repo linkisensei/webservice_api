@@ -52,4 +52,12 @@ class external_api_adapter {
             throw api_exception::fromException($th)->setStatusCode(400);
         }
     }
+
+    public function get_class() : string {
+        return $this->class;
+    }
+
+    public function get_method() : string {
+        return $this->method;
+    }
 }

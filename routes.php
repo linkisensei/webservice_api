@@ -24,3 +24,16 @@ $router->group('/oauth/credentials', function (RouteGroup $route) {
 $router->get('/me', [user_controller::class, 'get_current_user'])
     ->middleware(new oauth_token_auth())
     ->middleware(new request_logger());
+
+//
+$router->get('/testing', function($request){
+    return ['test' => true];
+});
+
+$router->get('/testing2', "\TestController::test");
+
+class TestController{
+    public static function test($request){
+        return true;
+    }
+}
