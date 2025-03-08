@@ -72,6 +72,7 @@ class openapi_documentation_service {
     protected function generate(string $format = self::FORMAT_JSON): string {
         $previous_language = force_current_language(config::instance()->get_docs_language());
 
+        \core_php_time_limit::raise();
         raise_memory_limit(MEMORY_HUGE);
 
         $router = $this->initialize_router();
