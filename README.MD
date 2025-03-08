@@ -1,4 +1,4 @@
-# 🚀 Webservice API Plugin for Moodle
++# 🚀 Webservice API Plugin for Moodle
 
 ## 🌟 Overview
 
@@ -33,6 +33,54 @@ This plugin provides a RESTful webservice API for Moodle, implementing OAuth2 au
    - Navigate to `Site Administration > Plugins > Webservices > Webservice API`
    - Set the JWT secret keys and token expiration values
    - Enable the required authentication methods
+
+### 🔄 Webserver Configuration
+
+To properly handle API requests, your webserver must be configured to route all non-static requests to `index.php`.
+
+#### Apache (.htaccess)
+
+For Apache users, add the following `.htaccess` file inside the `webservice/api` directory:
+
+```apache
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+```
+
+#### Nginx
+
+For Nginx, you need to add the following configuration inside your server block:
+
+```nginx
+location /webservice/api/ {
+    try_files $uri /webservice/api/index.php?$query_string;
+}
+```
+
+#### Caddy
+
+For Caddy users, add the following rule to your `Caddyfile`:
+
+```caddy
+route /webservice/api/* {
+    try_files {path} /webservice/api/index.php?{query}
+}
+```
+
+#### Lighttpd
+
+For Lighttpd users, add the following rewrite rule:
+
+```lighttpd
+url.rewrite-if-not-file = (
+    "^/webservice/api/(.*)$" => "/webservice/api/index.php?$1"
+)
+```
+
+**These configurations ensure that all API requests are properly routed to index.php, allowing the plugin to handle them correctly.**
 
 ## ⚙️ Configuration
 
@@ -90,9 +138,9 @@ The `webservice_api` plugin allows other Moodle plugins to register their own ro
 Example:
 
 ```php
-function PLUGIN_NAME_webservice_api_register_routes($router) {
-    $router->get('/custom-endpoint', function ($request, $response) {
-        return $response->withJson(['message' => 'Hello from custom plugin!']);
+function PLUGIN_NAME_webservice_api_register_routes(\League\Route\Router $router) {
+    $router->get('/custom-endpoint', function (\Psr\Http\Message\ServerRequestInterface $request) {
+        return ['message' => 'Hello from custom plugin!'];
     });
 }
 ```
@@ -132,7 +180,7 @@ This approach ensures compatibility with existing Moodle web services while leve
 
 ### 📂 Autoloading the Plugin
 
-If another plugin needs to autoload the classes from this plugin, it should include the `bootstrap.php` file located in the root of `webservice/api`:
+If another plugin needs to autoload the classes from this plugin's vendors, it should include the `bootstrap.php` file located in the root of `webservice/api`:
 
 ```php
 require_once($CFG->dirroot . '/webservice/api/bootstrap.php');

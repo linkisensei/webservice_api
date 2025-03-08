@@ -17,15 +17,7 @@ require_once(__DIR__ . '/../../config.php');
 $request = \webservice_api\factories\request_factory::from_globals();
 
 // Initiating router
-$router = new \League\Route\Router();
-
-// Setting JSON Strategy
-$router->setStrategy(\webservice_api\routing\strategies\json_strategy::factory());
-
-// Loading routes
-\webservice_api\routing\route_manager::register_local_routes($router);
-\webservice_api\routing\route_manager::register_from_function_callbacks();
-\webservice_api\routing\route_manager::apply_routes($router);
+$router = \webservice_api\factories\router\router_factory::make_router();
 
 // Responding to browser
 $emmiter = new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter;

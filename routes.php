@@ -15,7 +15,7 @@ $router->middleware(new \webservice_api\http\middlewares\cors_middleware());
 $router->post('/oauth2/token', [oauth2_controller::class, 'issue_token']);
 
 // Auth clients and credentials
-$router->group('/oauth/credentials', function (RouteGroup $route) {
+$router->group('/oauth2/credentials', function (RouteGroup $route) {
     $route->post('/', [client_credentials_controller::class, 'create_credentials']);
     $route->patch('/{client_id}', [client_credentials_controller::class, 'update_credentials']);
     $route->delete('/{client_id}', [client_credentials_controller::class, 'delete_credentials']);
