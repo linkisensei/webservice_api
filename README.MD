@@ -1,4 +1,4 @@
-# 🚀 Webservice API Plugin for Moodle
+# 🚀 REST API Plugin for Moodle
 
 ## 🌟 Overview
 
