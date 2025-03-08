@@ -7,15 +7,7 @@ use \webservice_api\controllers\abstract_controller;
 use \webservice_api\http\response\transformers\entities\compact_user_transformer;
 
 class user_controller extends abstract_controller {
-    const RESOURCE_PATH = 'users';
-
-    protected moodle_database $db;
-
-    public function __construct() {
-        global $DB;
-        $this->db = $DB;
-    }
-
+    
     public function get_current_user() : hal_resource {
         global $USER;
 

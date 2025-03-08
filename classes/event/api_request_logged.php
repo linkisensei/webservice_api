@@ -4,6 +4,7 @@ defined('MOODLE_INTERNAL') || die();
 
 use context_system;
 use Psr\Http\Message\ServerRequestInterface;
+use \webservice_api\helpers\routing\api_route_helper;
 
 class api_request_logged extends \core\event\base {
 
@@ -85,7 +86,7 @@ class api_request_logged extends \core\event\base {
         $event = static::create([
             'userid' => $USER->id ?? 0,
             'other' => [
-                'route' => '/webservice/api/' . trim($request->getUri()->getPath(), '/'),
+                'route' => api_route_helper::get_api_absolute_uri($request->getUri()->getPath()),
             ],
         ]);
 

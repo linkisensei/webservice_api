@@ -10,6 +10,7 @@ class client_credentials_controller extends abstract_controller {
     protected oauth_credentials_service $service;
 
     public function __construct(){
+        parent::__construct();
         $this->service = new oauth_credentials_service();
     }
 

@@ -6,21 +6,20 @@ use \webservice_api\exceptions\auth_failure_exception;
 use \webservice_api\config;
 use \webservice_api\services\oauth_token_service;
 use \webservice_api\controllers\abstract_controller;
-use webservice_api\services\oauth_credentials_service;
+use \webservice_api\services\oauth_credentials_service;
 
-use OpenApi\Attributes as OA;
-
+use \OpenApi\Attributes as OA;
+use \lang_string;
 
 #[OA\SecurityScheme(
     securityScheme: "bearerAuth",
     type: "http",
     scheme: "bearer",
     bearerFormat: "JWT",
-    description: "JWT access token must be included in the Authorization header"
+    description: new lang_string("docs:bearer_auth_jwt_description", "webservice_api"),
 )]
 class oauth_controller extends abstract_controller{
 
-    protected moodle_database $db;
     protected $token_service;
 
     const GRANT_CLIENT_CREDENTIALS = 'client_credentials';
@@ -28,8 +27,7 @@ class oauth_controller extends abstract_controller{
     const GRANT_REFRESH_TOKEN = 'refresh_token';
 
     public function __construct() {
-        global $DB;
-        $this->db = $DB;
+        parent::__construct();
         $this->token_service = new oauth_token_service();
     }
 
@@ -147,22 +145,20 @@ class oauth_controller extends abstract_controller{
     }
     
     /**
-     * POST /oauth/token
-     *
      * @param ServerRequestInterface $request
      * @return object
      */
     #[OA\Post(
-        path: "/oauth/token",
-        summary: "Generate an access token",
-        description: "Handles OAuth authentication and returns an access token.",
+        path: "/oauth2/token",
+        summary: new lang_string("docs:post_oauth_token_summary", "webservice_api"),
+        description: new lang_string("docs:post_oauth_token_description", "webservice_api"),
         tags: ["OAuth"],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 oneOf: [
                     new OA\Schema(
-                        description: "Password grant request",
+                        description: new lang_string("docs:password_grant_request", "webservice_api"),
                         required: ["grant_type", "username", "password"],
                         properties: [
                             new OA\Property(property: "grant_type", type: "string", example: "password"),
@@ -171,7 +167,7 @@ class oauth_controller extends abstract_controller{
                         ]
                     ),
                     new OA\Schema(
-                        description: "Client credentials grant request",
+                        description: new lang_string("docs:client_credentials_grant_request", "webservice_api"),
                         required: ["grant_type", "client_id", "client_secret"],
                         properties: [
                             new OA\Property(property: "grant_type", type: "string", example: "client_credentials"),
@@ -180,7 +176,7 @@ class oauth_controller extends abstract_controller{
                         ]
                     ),
                     new OA\Schema(
-                        description: "Refresh token grant request",
+                        description: new lang_string("docs:refresh_token_grant_request", "webservice_api"),
                         required: ["grant_type", "refresh_token"],
                         properties: [
                             new OA\Property(property: "grant_type", type: "string", example: "refresh_token"),
@@ -193,7 +189,7 @@ class oauth_controller extends abstract_controller{
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Access token generated successfully",
+                description: new lang_string("docs:access_token_generated_success", "webservice_api"),
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "access_token", type: "string", example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."),
@@ -205,19 +201,19 @@ class oauth_controller extends abstract_controller{
             ),
             new OA\Response(
                 response: 400,
-                description: "Invalid request",
+                description: new lang_string("docs:invalid_request", "webservice_api"),
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: "error", type: "string", example: "Missing grant_type")
+                        new OA\Property(property: "error", type: "string", example: new lang_string("exception:missing_grant_type", "webservice_api"))
                     ]
                 )
             ),
             new OA\Response(
                 response: 401,
-                description: "Invalid credentials",
+                description: new lang_string("docs:invalid_credentials", "webservice_api"),
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: "error", type: "string", example: "Invalid user credentials")
+                        new OA\Property(property: "error", type: "string", example: new lang_string("exception:invalid_user_credentials", "webservice_api"))
                     ]
                 )
             )
@@ -228,7 +224,7 @@ class oauth_controller extends abstract_controller{
             self::GRANT_PASSWORD => $this->get_user_for_password_grant($request),
             self::GRANT_REFRESH_TOKEN => $this->get_user_for_refresh_token_grant($request),
             self::GRANT_CLIENT_CREDENTIALS => $this->get_user_for_client_credentials_grant($request),
-            default => throw new auth_failure_exception('Invalid grant_type', 400),
+            default => throw auth_failure_exception::fromString('exception:missing_grant_type', "webservice_api")->setStatusCode(400),
         };
         
         $this->validate_user($user);

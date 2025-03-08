@@ -3,9 +3,16 @@
 use \moodle_url;
 use \Psr\Http\Message\ServerRequestInterface;
 use \webservice_api\exceptions\api_exception;
+use \moodle_database;
 
 abstract class abstract_controller {
+    protected moodle_database $db;
 
+    public function __construct() {
+        global $DB;
+        $this->db = $DB;
+    }
+    
     /**
      * Retrieves a required parameter from the provided source array.
      * Throws an exception if the parameter is missing.

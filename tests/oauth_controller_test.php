@@ -28,7 +28,7 @@ class oauth_controller_test extends advanced_testcase {
 
 
     public function test_issue_token_with_invalid_password() {
-        $request = $this->make_request('POST', '/api/oauth/token', [
+        $request = $this->make_request('POST', '/api/oauth2/token', [
             'username' => 'invalid',
             'password' => 'wrongpassword'
         ]);
@@ -44,7 +44,7 @@ class oauth_controller_test extends advanced_testcase {
             'confirmed' => 1,
         ]);
         
-        $request = $this->make_request('POST', '/api/oauth/token', [
+        $request = $this->make_request('POST', '/api/oauth2/token', [
             'username' => 'testuser01',
             'password' => 'Senha@123'
         ]);
@@ -67,7 +67,7 @@ class oauth_controller_test extends advanced_testcase {
             'confirmed' => 1,
         ]);
         
-        $request = $this->make_request('POST', '/api/oauth/token', [
+        $request = $this->make_request('POST', '/api/oauth2/token', [
             'grant_type' => 'refresh_token',
             'refresh_token' => $token_service->generate_refresh_token($user),
         ]);
@@ -95,7 +95,7 @@ class oauth_controller_test extends advanced_testcase {
         $service = new oauth_credentials_service();
         $credentials = $service->generate_credentials($user->id);
         
-        $request = $this->make_request('POST', '/api/oauth/token', [
+        $request = $this->make_request('POST', '/api/oauth2/token', [
             'grant_type' => 'client_credentials',
             'client_id' => $credentials->get('client_id'),
             'client_secret' => $credentials->get_secret(),

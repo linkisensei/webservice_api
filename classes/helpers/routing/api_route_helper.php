@@ -31,4 +31,13 @@ class api_route_helper {
         $root = new moodle_url('/webservice/api');
         return '/' . ltrim(substr($absolute, strlen($root->get_path())), '/');
     }
+
+    /**
+     * Returns the root URI of the API
+     *
+     * @return string API root (e.g., 'https://example.com/webservice/api')
+     */
+    public static function get_api_root_uri() : string {
+        return (new moodle_url('/webservice/api'))->out(false);
+    }
 }

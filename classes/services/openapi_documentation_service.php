@@ -1,5 +1,6 @@
 <?php namespace webservice_api\services;
 
+use \webservice_api\helpers\routing\api_route_helper;
 use \webservice_api\routing\route_manager;
 use \webservice_api\routing\adapters\external_api_adapter;
 use \OpenApi\Generator;
@@ -9,32 +10,37 @@ use \ReflectionProperty;
 use \ReflectionFunction;
 use \Closure;
 
+/**
+ * Service responsible for generating OpenAPI documentation for the webservice API.
+ * 
+ * This class scans the registered API routes, collects relevant controllers,
+ * and generates OpenAPI-compliant documentation in JSON or YAML format. It 
+ * dynamically appends the API server URL and ensures the documentation remains
+ * up to date with the defined routes.
+ * 
+ * Supported formats:
+ * - JSON (`application/json`)
+ * - YAML (`application/x-yaml`)
+ */
 class openapi_documentation_service {
 
     const FORMAT_JSON = 'json';
     const FORMAT_YAML = 'yaml';
 
-    public function generate_and_serve(string $format = self::FORMAT_JSON): string {
-        $this->set_content_type($format);
-        echo $this->generate($format);
-        exit();
-    }
-
-    protected function set_content_type(string $format = self::FORMAT_JSON){
+    public function get_content_type(string $format = self::FORMAT_JSON){
         switch ($format) {
             case self::FORMAT_YAML:
-                header('Content-Type: application/x-yaml');
-                header('Content-Disposition: attachment; filename="openapi.yaml"');
-                break;
+                return 'application/x-yaml';
             case self::FORMAT_JSON:
             default:
-                header('Content-Type: application/json');
-                header('Content-Disposition: attachment; filename="openapi.json"');
+                return 'application/json';
         }
     }
 
     public function generate(string $format = self::FORMAT_JSON): string {
         raise_memory_limit(MEMORY_HUGE);
+
+        // opcache_reset();
 
         $router = $this->initialize_router();
         $routes = $this->get_all_routes($router);
@@ -45,15 +51,33 @@ class openapi_documentation_service {
             $this->resolve_and_append_file($controllers, $route->getCallable());
         }
 
+        $this->invalidate_controllers_opcache($controllers);
         $openapi = @Generator::scan(array_keys($controllers));
+
+        // Appending server
+        $openapi->servers = [
+            new \OpenApi\Annotations\Server([
+                'url' => api_route_helper::get_api_root_uri(),
+                'description' => '',
+            ])
+        ];
 
         switch ($format) {
             case self::FORMAT_YAML:
                 return $openapi->toYaml();
-                break;
             case self::FORMAT_JSON:
             default:
                 return $openapi->toJson();
+        }
+    }
+
+    protected function invalidate_controllers_opcache(array $controllers){
+        if(!function_exists('opcache_invalidate')){
+            return;
+        }
+
+        foreach (array_values($controllers) as $filepath) {
+            opcache_invalidate($filepath, false);
         }
     }
 
@@ -62,7 +86,7 @@ class openapi_documentation_service {
 
         $router = new Router();
 
-        require_once($CFG->dirroot . '/webservice/api/routes.php');
+        require($CFG->dirroot . '/webservice/api/routes.php');
 
         route_manager::register_from_function_callbacks();
         route_manager::apply_routes($router);
