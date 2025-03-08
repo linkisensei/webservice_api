@@ -6,15 +6,15 @@ use \advanced_testcase;
 use \webservice_api\config;
 use \Laminas\Diactoros\ServerRequest;
 use \Laminas\Diactoros\Response\JsonResponse;
-use \webservice_api\http\middlewares\auth\oauth_token_auth;
-use \webservice_api\services\oauth_token_service;
+use \webservice_api\http\middlewares\auth\oauth2_token_auth;
+use \webservice_api\services\oauth2_token_service;
 use \webservice_api\exceptions\auth_failure_exception;
 use \Psr\Http\Server\RequestHandlerInterface;
 
-class oauth_token_auth_test extends advanced_testcase {
+class oauth2_token_auth_test extends advanced_testcase {
 
-    protected oauth_token_auth $middleware;
-    protected oauth_token_service $token_service;
+    protected oauth2_token_auth $middleware;
+    protected oauth2_token_service $token_service;
     protected object $user;
 
     protected function setUp(): void {
@@ -39,8 +39,8 @@ class oauth_token_auth_test extends advanced_testcase {
         $manager = $DB->get_record('role', array('shortname' => 'manager'), '*', MUST_EXIST);
         role_assign($manager->id, $this->user->id, \context_system::instance()->id); 
         
-        $this->token_service = new oauth_token_service();
-        $this->middleware = new oauth_token_auth();
+        $this->token_service = new oauth2_token_service();
+        $this->middleware = new oauth2_token_auth();
     }
 
 

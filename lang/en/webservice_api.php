@@ -6,9 +6,9 @@ $string['pluginname'] = 'REST API';
 
 
 $string['event:api_auth_failed'] = 'API authentication failed';
-$string['event:oauth_credentials_created'] = 'Oauth credentials created';
-$string['event:oauth_credentials_updated'] = 'Oauth credentials updated';
-$string['event:oauth_credentials_deleted'] = 'Oauth credentials deleted';
+$string['event:oauth2_credentials_created'] = 'Oauth credentials created';
+$string['event:oauth2_credentials_updated'] = 'Oauth credentials updated';
+$string['event:oauth2_credentials_deleted'] = 'Oauth credentials deleted';
 
 
 $string['settings:manage_title'] = 'Manage REST API';
@@ -22,8 +22,8 @@ $string['api:manageselfcredentials'] = 'manage your own client credentials';
 $string['api:config'] = 'configure the API settings';
 
 
-$string['docs:post_oauth_token_summary'] = "Generate an access token";
-$string['docs:post_oauth_token_description'] = "Handles OAuth authentication and returns an access token.";
+$string['docs:post_oauth2_token_summary'] = "Generate an access token";
+$string['docs:post_oauth2_token_description'] = "Handles OAuth authentication and returns an access token.";
 $string['docs:password_grant_request'] = "Password grant request";
 $string['docs:client_credentials_grant_request'] = "Client credentials grant request";
 $string['docs:refresh_token_grant_request'] = "Refresh token grant request";

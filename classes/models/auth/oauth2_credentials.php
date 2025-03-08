@@ -2,11 +2,11 @@
 
 use \core\persistent;
 use \webservice_api\exceptions\api_exception;
-use \webservice_api\event\oauth_credentials_created;
-use \webservice_api\event\oauth_credentials_updated;
-use \webservice_api\event\oauth_credentials_deleted;
+use \webservice_api\event\oauth2_credentials_created;
+use \webservice_api\event\oauth2_credentials_updated;
+use \webservice_api\event\oauth2_credentials_deleted;
 
-class oauth_credentials extends persistent {
+class oauth2_credentials extends persistent {
     const TABLE = 'webservice_api_credentials';
 
     protected ?string $secret = null;
@@ -74,15 +74,15 @@ class oauth_credentials extends persistent {
     }
 
     protected function after_create(){
-        oauth_credentials_created::from_oauth_credentials($this)->trigger();
+        oauth2_credentials_created::from_oauth2_credentials($this)->trigger();
     }
 
     protected function after_update($result){
-        oauth_credentials_updated::from_oauth_credentials($this)->trigger();
+        oauth2_credentials_updated::from_oauth2_credentials($this)->trigger();
     }
 
     protected function after_delete($result){
-        oauth_credentials_deleted::from_oauth_credentials($this)->trigger();
+        oauth2_credentials_deleted::from_oauth2_credentials($this)->trigger();
     }
 
     public static function generate_client_id(int $userid) : string {

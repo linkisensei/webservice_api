@@ -2,8 +2,8 @@
 
 use \webservice_api\http\response\resources\api_resource;
 use \webservice_api\helpers\routing\api_route_helper;
-use \webservice_api\models\auth\oauth_credentials;
-use \webservice_api\http\response\transformers\entities\oauth_credentials_transformer;
+use \webservice_api\models\auth\oauth2_credentials;
+use \webservice_api\http\response\transformers\entities\oauth2_credentials_transformer;
 use \webservice_api\http\response\transformers\entities\compact_user_transformer;
 
 class api_resource_factory {
@@ -16,8 +16,8 @@ class api_resource_factory {
         return $resource;
     }
 
-    public static function make_oauth_credentials_resource(oauth_credentials $credentials) : api_resource {
-        $credentials_transformer = new oauth_credentials_transformer();
+    public static function make_oauth2_credentials_resource(oauth2_credentials $credentials) : api_resource {
+        $credentials_transformer = new oauth2_credentials_transformer();
         $resource = static::make_resource($credentials_transformer->transform($credentials));
 
         // Embedding user

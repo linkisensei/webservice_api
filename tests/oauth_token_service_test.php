@@ -4,16 +4,16 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 
 use \advanced_testcase;
 use \webservice_api\config;
-use webservice_api\services\oauth_token_service;
+use webservice_api\services\oauth2_token_service;
 
-class oauth_token_service_test extends advanced_testcase {
+class oauth2_token_service_test extends advanced_testcase {
 
     protected $token_service;
 
     protected function setUp(): void {
         parent::setUp();
         config::generate_secrets();
-        $this->token_service = new oauth_token_service();
+        $this->token_service = new oauth2_token_service();
     }
 
     public function test_generate_and_parse_access_token() {

@@ -3,7 +3,7 @@
 use \webservice_api\config;
 use \webservice_api\value_objects\auth\jwt_token;
 
-final class oauth_token_service {
+final class oauth2_token_service {
 
     private config $config;
 

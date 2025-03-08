@@ -8,14 +8,14 @@ use \Exception;
 use \Firebase\JWT\BeforeValidException;
 use \Firebase\JWT\ExpiredException;
 
-use \webservice_api\services\oauth_token_service;
+use \webservice_api\services\oauth2_token_service;
 
-class oauth_token_auth extends abstract_auth {
+class oauth2_token_auth extends abstract_auth {
 
     protected $token_service;
 
     public function __construct(){
-        $this->token_service = new oauth_token_service();
+        $this->token_service = new oauth2_token_service();
     }
 
     protected function get_authenticated_user(ServerRequestInterface $request) : ?object {

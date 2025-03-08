@@ -2,11 +2,11 @@
 
 use \context;
 use \webservice_api\config;
-use \webservice_api\models\auth\oauth_credentials;
+use \webservice_api\models\auth\oauth2_credentials;
 use \webservice_api\exceptions\auth_failure_exception;
 use \webservice_api\exceptions\api_exception;
 
-final class oauth_credentials_service {
+final class oauth2_credentials_service {
     private config $config;
     private context $context;
 
@@ -15,8 +15,8 @@ final class oauth_credentials_service {
         $this->context = \context_system::instance();
     }
 
-    public function get_credentials(string $client_id) : oauth_credentials {
-        if(!$credential = oauth_credentials::get_by_client_id($client_id)){
+    public function get_credentials(string $client_id) : oauth2_credentials {
+        if(!$credential = oauth2_credentials::get_by_client_id($client_id)){
             throw new api_exception('Client credentials not found!', 404);
         }
         return $credential;
@@ -30,8 +30,8 @@ final class oauth_credentials_service {
      * @param string $secret
      * @return client_secret|null
      */
-    public function validate_credentials(string $clientid, string $secret) : oauth_credentials {
-        if(!$credential = oauth_credentials::validate_credentials($clientid, $secret)){
+    public function validate_credentials(string $clientid, string $secret) : oauth2_credentials {
+        if(!$credential = oauth2_credentials::validate_credentials($clientid, $secret)){
             throw new auth_failure_exception('Invalid client credentials', 401);
         }
 
@@ -42,10 +42,10 @@ final class oauth_credentials_service {
         return $credential;
     }
 
-    public function generate_credentials(int $user_id, int $expires_at = 0) : oauth_credentials {
+    public function generate_credentials(int $user_id, int $expires_at = 0) : oauth2_credentials {
         $this->check_permissions($user_id);
 
-        $credentials = new oauth_credentials(0, (object) [
+        $credentials = new oauth2_credentials(0, (object) [
             'user_id' => $user_id,
             'expires_at' => $expires_at,
         ]);
@@ -54,7 +54,7 @@ final class oauth_credentials_service {
         return $credentials;
     }
 
-    public function regenerate_credentials(string $client_id, int $expires_at = 0) : oauth_credentials {
+    public function regenerate_credentials(string $client_id, int $expires_at = 0) : oauth2_credentials {
         $credentials = $this->get_credentials($client_id);
         $this->check_permissions((int) $credentials->get('user_id'));
 
@@ -68,7 +68,7 @@ final class oauth_credentials_service {
         return $credentials;
     }
 
-    public function revoke_credentials(string $client_id) : oauth_credentials {
+    public function revoke_credentials(string $client_id) : oauth2_credentials {
         $credentials = $this->get_credentials($client_id);
 
         $this->check_permissions((int) $credentials->get('user_id'));

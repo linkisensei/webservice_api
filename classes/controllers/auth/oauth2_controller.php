@@ -4,9 +4,9 @@ use \Psr\Http\Message\ServerRequestInterface;
 use \moodle_database;
 use \webservice_api\exceptions\auth_failure_exception;
 use \webservice_api\config;
-use \webservice_api\services\oauth_token_service;
+use \webservice_api\services\oauth2_token_service;
 use \webservice_api\controllers\abstract_controller;
-use \webservice_api\services\oauth_credentials_service;
+use \webservice_api\services\oauth2_credentials_service;
 
 use \OpenApi\Attributes as OA;
 use \lang_string;
@@ -18,7 +18,7 @@ use \lang_string;
     bearerFormat: "JWT",
     description: new lang_string("docs:bearer_auth_jwt_description", "webservice_api"),
 )]
-class oauth_controller extends abstract_controller{
+class oauth2_controller extends abstract_controller{
 
     protected $token_service;
 
@@ -28,7 +28,7 @@ class oauth_controller extends abstract_controller{
 
     public function __construct() {
         parent::__construct();
-        $this->token_service = new oauth_token_service();
+        $this->token_service = new oauth2_token_service();
     }
 
     protected function detect_grant_type(ServerRequestInterface $request) : string {
@@ -108,7 +108,7 @@ class oauth_controller extends abstract_controller{
             throw new auth_failure_exception("Empty client secret", 400);
         }
 
-        $service = new oauth_credentials_service();
+        $service = new oauth2_credentials_service();
         $credentials = $service->validate_credentials($body['client_id'], $body['client_secret']);
 
         if(!$user = $credentials->get_user()){
@@ -150,8 +150,8 @@ class oauth_controller extends abstract_controller{
      */
     #[OA\Post(
         path: "/oauth2/token",
-        summary: new lang_string("docs:post_oauth_token_summary", "webservice_api"),
-        description: new lang_string("docs:post_oauth_token_description", "webservice_api"),
+        summary: new lang_string("docs:post_oauth2_token_summary", "webservice_api"),
+        description: new lang_string("docs:post_oauth2_token_description", "webservice_api"),
         tags: ["OAuth"],
         requestBody: new OA\RequestBody(
             required: true,

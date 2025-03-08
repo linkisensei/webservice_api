@@ -1,13 +1,13 @@
 <?php namespace webservice_api\http\response\transformers\entities;
 
 use \webservice_api\http\response\transformers\abstract_data_transformer;
-use \webservice_api\models\auth\oauth_credentials;
+use \webservice_api\models\auth\oauth2_credentials;
 
-class oauth_credentials_transformer extends abstract_data_transformer {
+class oauth2_credentials_transformer extends abstract_data_transformer {
 
     public function transform(mixed $data): array {
-        if(!($data instanceof oauth_credentials)){
-            throw new \InvalidArgumentException("Expected instance of \"webservice_api\models\auth\oauth_credentials\"");
+        if(!($data instanceof oauth2_credentials)){
+            throw new \InvalidArgumentException("Expected instance of \"webservice_api\models\auth\oauth2_credentials\"");
         }
 
         return [
