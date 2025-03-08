@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<libraries>
+    <library>
+        <name>league/route</name>
+        <version>6.2</version>
+        <license>MIT</license>
+        <licensefile>vendor/league/route/LICENSE</licensefile>
+        <homepage>https://github.com/thephpleague/route</homepage>
+        <repository>https://github.com/thephpleague/route.git</repository>
+        <description>A routing library for PHP 7+</description>
+    </library>
+
+    <library>
+        <name>laminas/laminas-diactoros</name>
+        <version>3.5</version>
+        <license>BSD-3-Clause</license>
+        <licensefile>vendor/laminas/laminas-diactoros/LICENSE.md</licensefile>
+        <homepage>https://github.com/laminas/laminas-diactoros</homepage>
+        <repository>https://github.com/laminas/laminas-diactoros.git</repository>
+        <description>PSR-7 HTTP message implementation</description>
+    </library>
+
+    <library>
+        <name>laminas/laminas-httphandlerrunner</name>
+        <version>2.11</version>
+        <license>BSD-3-Clause</license>
+        <licensefile>vendor/laminas/laminas-httphandlerrunner/LICENSE.md</licensefile>
+        <homepage>https://github.com/laminas/laminas-httphandlerrunner</homepage>
+        <repository>https://github.com/laminas/laminas-httphandlerrunner.git</repository>
+        <description>PSR-15 HTTP handler runner</description>
+    </library>
+
+    <library>
+        <name>zircote/swagger-php</name>
+        <version>5.0</version>
+        <license>MIT</license>
+        <licensefile>vendor/zircote/swagger-php/LICENSE</licensefile>
+        <homepage>https://github.com/zircote/swagger-php</homepage>
+        <repository>https://github.com/zircote/swagger-php.git</repository>
+        <description>OpenAPI annotations parser</description>
+    </library>
+
+    <library>
+        <name>swagger-api/swagger-ui</name>
+        <version>5.20.0</version>
+        <license>Apache-2.0</license>
+        <licensefile>docs/LICENSE</licensefile>
+        <homepage>https://github.com/swagger-api/swagger-ui</homepage>
+        <repository>https://github.com/swagger-api/swagger-ui.git</repository>
+        <description>Interactive API documentation UI</description>
+    </library>
+</libraries>

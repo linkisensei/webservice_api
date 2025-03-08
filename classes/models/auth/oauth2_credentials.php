@@ -59,7 +59,7 @@ class oauth2_credentials extends persistent {
         global $USER, $DB;
 
         if($DB->record_exists(static::TABLE, ['client_id' => $this->get('client_id')])){
-            throw new api_exception('Credentials already exist for the specified user', 409);
+            throw api_exception::fromApiString('exception:credentials_already_exist')->setStatusCode(409);
         }
         
         $this->raw_set('created_at', time());

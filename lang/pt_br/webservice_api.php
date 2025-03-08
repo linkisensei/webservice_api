@@ -24,7 +24,7 @@ $string['api:config'] = 'configurar as configurações da API';
 
 
 $string['docs:post_oauth2_token_summary'] = "Gerar um token de acesso";
-$string['docs:post_oauth2_token_description'] = "Lida com a autenticação OAuth e retorna um token de acesso.";
+$string['docs:post_oauth2_token_description'] = "Lida com a autenticação OAuth2 e retorna um token de acesso.";
 $string['docs:password_grant_request'] = "Requisição de concessão por senha";
 $string['docs:client_credentials_grant_request'] = "Requisição de concessão por credenciais de cliente";
 $string['docs:refresh_token_grant_request'] = "Requisição de concessão por token de atualização";
@@ -32,6 +32,19 @@ $string['docs:access_token_generated_success'] = "Token de acesso gerado com suc
 $string['docs:invalid_request'] = "Requisição inválida";
 $string['docs:invalid_credentials'] = "Credenciais inválidas";
 $string['docs:bearer_auth_jwt_description'] = 'O token de acesso JWT deve ser incluído no cabeçalho Authorization';
+$string['docs:oauth2_credentials_description'] = 'Endpoints para gerenciamento de credenciais OAuth2';
+$string['docs:create_credentials_summary'] = 'Criar novas credenciais OAuth2';
+$string['docs:create_credentials_description'] = 'Gera credenciais para um usuário específico.';
+$string['docs:create_credentials_success'] = 'Credenciais criadas com sucesso';
+$string['docs:update_credentials_summary'] = 'Atualizar credenciais OAuth2';
+$string['docs:update_credentials_description'] = 'Regenera a chave secreta para um client_id específico.';
+$string['docs:update_credentials_success'] = 'Credenciais atualizadas com sucesso';
+$string['docs:delete_credentials_summary'] = 'Revogar credenciais OAuth2';
+$string['docs:delete_credentials_description'] = 'Remove as credenciais OAuth2 com base no client_id.';
+$string['docs:delete_credentials_success'] = 'Credenciais revogadas com sucesso';
+$string['docs:credentials_not_found'] = 'Credenciais não encontradas';
+$string['docs:invalid_parameters'] = 'Parâmetros inválidos';
+$string['docs:expires_at_description'] = 'Timestamp opcional para expiração das credenciais';
 
 
 $string['exception:invalid_access_token_secret'] = 'Segredo do token de acesso não configurado';
@@ -48,3 +61,4 @@ $string['exception:client_credentials_not_found'] = 'Credenciais do cliente não
 $string['exception:invalid_client_credentials'] = "Credenciais do cliente inválidas";
 $string['exception:expired_client_credentials'] = "Credenciais do cliente expiradas";
 $string['exception:invalid_credentials_expiration'] = "A expiração das credenciais deve ser um timestamp futuro";
+$string['exception:credentials_already_exist'] = 'Credenciais já existentes para este usuário';

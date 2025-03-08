@@ -2,6 +2,15 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Webservice API plugin version file
+ *
+ * @package   webservice_api
+ * @author    Lucas Barreto
+ * @license   GNU GPL v3 or later
+ * @link https://github.com/linkisensei/webservice_api
+ */
+
 $plugin->component    = 'webservice_api';
 $plugin->release      = '3.0';
 $plugin->version      = 2025030800;

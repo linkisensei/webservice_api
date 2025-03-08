@@ -112,7 +112,7 @@ class openapi_documentation_service {
         }
 
         foreach (array_values($controllers) as $filepath) {
-            opcache_invalidate($filepath, false);
+            opcache_invalidate($filepath, true);
         }
     }
 

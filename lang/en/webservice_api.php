@@ -24,7 +24,7 @@ $string['api:config'] = 'configure the API settings';
 
 
 $string['docs:post_oauth2_token_summary'] = "Generate an access token";
-$string['docs:post_oauth2_token_description'] = "Handles OAuth authentication and returns an access token.";
+$string['docs:post_oauth2_token_description'] = "Handles OAuth2 authentication and returns an access token.";
 $string['docs:password_grant_request'] = "Password grant request";
 $string['docs:client_credentials_grant_request'] = "Client credentials grant request";
 $string['docs:refresh_token_grant_request'] = "Refresh token grant request";
@@ -32,6 +32,19 @@ $string['docs:access_token_generated_success'] = "Access token generated success
 $string['docs:invalid_request'] = "Invalid request";
 $string['docs:invalid_credentials'] = "Invalid credentials";
 $string['docs:bearer_auth_jwt_description'] = 'JWT access token must be included in the Authorization header';
+$string['docs:oauth2_credentials_description'] = 'Endpoints for managing OAuth2 credentials';
+$string['docs:create_credentials_summary'] = 'Create new OAuth2 credentials';
+$string['docs:create_credentials_description'] = 'Generates credentials for a specific user.';
+$string['docs:create_credentials_success'] = 'Credentials successfully created';
+$string['docs:update_credentials_summary'] = 'Update OAuth2 credentials';
+$string['docs:update_credentials_description'] = 'Regenerate the secret key for a specific client_id.';
+$string['docs:update_credentials_success'] = 'Credentials successfully updated';
+$string['docs:delete_credentials_summary'] = 'Revoke OAuth2 credentials';
+$string['docs:delete_credentials_description'] = 'Remove OAuth2 credentials based on the client_id.';
+$string['docs:delete_credentials_success'] = 'Credentials successfully revoked';
+$string['docs:credentials_not_found'] = 'Credentials not found';
+$string['docs:invalid_parameters'] = 'Invalid parameters';
+$string['docs:expires_at_description'] = 'Optional timestamp for credential expiration';
 
 
 $string['exception:invalid_access_token_secret'] = 'Access token secret not configured';
@@ -48,3 +61,4 @@ $string['exception:client_credentials_not_found'] = 'Client credentials not foun
 $string['exception:invalid_client_credentials'] = "Invalid client credentials";
 $string['exception:expired_client_credentials'] = "Expired client credentials";
 $string['exception:invalid_credentials_expiration'] = "Credentials expiration must be a future timestamp";
+$string['exception:credentials_already_exist'] = 'Credentials already exist for the specified user';
