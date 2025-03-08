@@ -6,6 +6,7 @@ $string['pluginname'] = 'REST API';
 
 
 $string['event:api_auth_failed'] = 'API authentication failed';
+$string['event:api_route_requested'] = 'API route requested';
 $string['event:oauth2_credentials_created'] = 'Oauth2 credentials created';
 $string['event:oauth2_credentials_updated'] = 'Oauth2 credentials updated';
 $string['event:oauth2_credentials_deleted'] = 'Oauth2 credentials deleted';

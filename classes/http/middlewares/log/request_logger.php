@@ -5,13 +5,13 @@ use \Psr\Http\Server\MiddlewareInterface;
 use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \Psr\Http\Server\RequestHandlerInterface;
-use \webservice_api\event\api_request_logged;
+use \webservice_api\event\api_route_requested;
 use \League\Route\Http\Exception\HttpExceptionInterface;
 
 class request_logger implements MiddlewareInterface {
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
-        $event = api_request_logged::from_request($request);
+        $event = api_route_requested::from_request($request);
         $exception = null;
         $response = null;
 

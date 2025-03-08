@@ -6,7 +6,7 @@ use context_system;
 use Psr\Http\Message\ServerRequestInterface;
 use \webservice_api\helpers\routing\api_route_helper;
 
-class api_request_logged extends \core\event\base {
+class api_route_requested extends \core\event\base {
 
     protected float $start_time = 0;
     protected float $end_time = 0;
@@ -33,7 +33,7 @@ class api_request_logged extends \core\event\base {
      * @return string
      */
     public static function get_name(): string {
-        return get_string('event:api_request_logged', 'webservice_api');
+        return get_string('event:api_route_requested', 'webservice_api');
     }
 
     public static function get_other_mapping(): array {

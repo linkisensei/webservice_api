@@ -5,7 +5,7 @@ use \Psr\Http\Server\MiddlewareInterface;
 use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \Psr\Http\Server\RequestHandlerInterface;
-use \webservice_api\event\api_request_logged;
+use \webservice_api\event\api_route_requested;
 use \League\Route\Http\Exception\HttpExceptionInterface;
 use \Laminas\Diactoros\Response\EmptyResponse;
 
