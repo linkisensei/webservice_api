@@ -4,6 +4,8 @@
 
 This plugin provides a RESTful webservice API for Moodle, implementing OAuth2 authentication, rate limiting, logging, and OpenAPI documentation. It allows external systems to interact securely with Moodle's data and functionalities.
 
+> This plugin is focused on `Moodle 4.2` and is does not takes into consideration new features like router or DI. It can be implemented in the future, but it seens that `Moodle 5.0+` will have a robust implementation for [API routes](https://moodledev.io/docs/5.0/apis/subsystems/routing) (It already exists on 4.5, but it will probably be refined).
+
 ## 🔥 Features
 
 - ✅ OAuth2 authentication (Password Grant, Client Credentials, and Refresh Token)
@@ -137,6 +139,7 @@ The `webservice_api` plugin allows other Moodle plugins to register their own ro
 
 Example:
 
+#### Moodle 4.1 to 4.2
 ```php
 function PLUGIN_NAME_webservice_api_register_routes(\League\Route\Router $router) {
     $router->get('/custom-endpoint', function (\Psr\Http\Message\ServerRequestInterface $request) {
@@ -161,6 +164,38 @@ route_manager::register(function($router){
 route_manager::register_file('path/to/routes.php')
 ```
 
+#### Moodle 4.3+
+Register the following hook into your `db/hooks.php` file.
+```php
+$callbacks = [
+    [
+        'hook' => webservice_api\hook\callbacks\pre_route_handling::class,
+        'callback' => YOUR_PLUGIN\hook_callbacks::class . '::register_routes_callback',
+        'priority' => 500,
+    ],
+];
+```
+
+Example of callback
+
+```php
+<?php
+namespace YOUR_PLUGIN;
+
+use \webservice_api\hook\callbacks\pre_route_handling;
+
+class hook_callbacks {
+    public static function register_routes_callback(pre_route_handling $hook): void {
+        if (during_initial_install() || !get_config('local_stuff', 'version')) {
+            return; // Prevent listening while your plugin is uninstalled
+        }
+
+        $router = $hook->get_router();
+        $router->post('/your-plugin/action', [custom_plugin_controller::class, 'handle_action']);
+    }
+}
+```
+
 ### </> Using the External API Adapter
 
 To expose Moodle's native `external_api` functions via the `webservice_api`, you can use the `external_api_adapter`. This adapter allows you to map Moodle's built-in web service functions to API routes without manually defining request handling logic.
@@ -178,13 +213,10 @@ route_manager::register(function($router) {
 
 This approach ensures compatibility with existing Moodle web services while leveraging the structured API handling provided by `webservice_api`.
 
-### 📂 Autoloading the Plugin
+### 📂 Autoloading the Plugin's vendors
 
-If another plugin needs to autoload the classes from this plugin's vendors, it should include the `bootstrap.php` file located in the root of `webservice/api`:
+All vendors used in this plugin can be autoloaded, since it's autoload.php is included via the `_after_config()` callback.
 
-```php
-require_once($CFG->dirroot . '/webservice/api/bootstrap.php');
-```
 
 This ensures that all necessary classes are properly loaded and available for use.
 
@@ -237,6 +269,8 @@ The plugin utilizes middleware for authentication, logging, and CORS handling:
 - `cors_middleware`: Handles CORS headers
 - `authenticated_rate_limit`: Enforces rate limits per user
 
+*You can implement new middlewares following the [Route's middleware documentation](https://github.com/thephpleague/route/blob/6.x/docs/6.x/middleware.md).*
+
 ## 🤝 Contributing
 
 If you'd like to contribute to the development of this plugin, please submit a pull request or open an issue on GitHub.
@@ -244,5 +278,3 @@ If you'd like to contribute to the development of this plugin, please submit a p
 ## 📜 License
 
 This plugin is licensed under the GNU General Public License v3.0.
-
-

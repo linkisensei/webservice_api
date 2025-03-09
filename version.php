@@ -4,6 +4,9 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Webservice API plugin version file
+ * 
+ * This plugin should not be necessary after Moodle 5.0
+ * @see https://moodledev.io/docs/5.0/apis/subsystems/routing
  *
  * @package   webservice_api
  * @author    Lucas Barreto
@@ -15,5 +18,5 @@ $plugin->component    = 'webservice_api';
 $plugin->release      = '3.0';
 $plugin->version      = 2025030800;
 $plugin->requires     = 2023042400;
-$plugin->supported    = [402, 405];
+$plugin->supported    = [402, 404];
 $plugin->maturity     = MATURITY_BETA;

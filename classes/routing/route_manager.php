@@ -29,12 +29,20 @@ class route_manager {
         foreach (get_plugins_with_function('webservice_api_register_routes') as $callback) {
             self::$route_callbacks[] = $callback; 
         };
+    }
 
+    public static function register_from_hook(Router $router){
+        $hook = new \webservice_api\hook\pre_route_handling($router);
+        \core\hook\manager::get_instance()->dispatch($hook);
     }
 
     public static function apply_routes(Router $router) {
         foreach (self::$route_callbacks as $callback) {
             $callback($router);
+        }
+
+        if(class_exists('core\hook\manager')){
+            self::register_from_hook($router);
         }
     }
 }

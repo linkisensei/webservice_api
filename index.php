@@ -7,7 +7,7 @@ require_once(__DIR__ . '/classes/handlers/error_handler.php');
 \webservice_api\handlers\error_handler::register();
 
 // Loading libraries and core
-require_once(__DIR__ . '/bootstrap.php');
+require_once(__DIR__ . '/vendor/autoload.php');
 require_once(__DIR__ . '/../../config.php');
 
 // Exception Handler
