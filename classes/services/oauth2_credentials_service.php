@@ -42,6 +42,15 @@ final class oauth2_credentials_service {
         return $credential;
     }
 
+    public function has_credentials(int $user_id) : bool {
+        return (bool) $this->get_user_credentials($user_id);
+    }
+
+    public function get_user_credentials(int $user_id) : ?oauth2_credentials {
+        $this->check_permissions($user_id);
+        return oauth2_credentials::get_by_user_id($user_id);
+    }
+
     public function generate_credentials(int $user_id, int $expires_at = 0) : oauth2_credentials {
         $this->check_permissions($user_id);
 

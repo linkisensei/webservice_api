@@ -26,10 +26,22 @@ class route_manager {
     }
 
     public static function register_from_function_callbacks(){
-        foreach (get_plugins_with_function('webservice_api_register_routes') as $callback) {
+        foreach (self::get_plugins_with_api_register_routes_function() as $callback) {
             self::$route_callbacks[] = $callback; 
         };
     }
+
+    protected static function get_plugins_with_api_register_routes_function(): array {
+        $callbacks = [];
+    
+        $plugins = get_plugins_with_function('webservice_api_register_routes');
+        array_walk_recursive($plugins, function ($callback) use (&$callbacks) {
+            $callbacks[] = $callback;
+        });
+    
+        return $callbacks;
+    }
+    
 
     public static function register_from_hook(Router $router){
         $hook = new \webservice_api\hook\pre_route_handling($router);
