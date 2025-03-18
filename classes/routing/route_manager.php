@@ -41,7 +41,7 @@ class route_manager {
     
         return $callbacks;
     }
-    
+   
 
     public static function register_from_hook(Router $router){
         $hook = new \webservice_api\hook\pre_route_handling($router);

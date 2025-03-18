@@ -4,8 +4,8 @@ use \Psr\Http\Message\ServerRequestInterface;
 use \moodle_url;
 
 class pagination_helper {
-    protected string $page_param = 'page';
-    protected string $limit_param = 'limit';
+    protected string $page_param = '_page';
+    protected string $limit_param = '_limit';
     protected int $limit = 20;
     protected int $min_page = 1;
 

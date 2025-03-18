@@ -4,9 +4,9 @@ use \Psr\Http\Message\ServerRequestInterface;
 use \moodle_url;
 
 class sequential_pagination_helper {
-    protected string $limit_param = 'limit';
-    protected string $before_param = 'before';
-    protected string $after_param = 'after';
+    protected string $limit_param = '_limit';
+    protected string $before_param = '_before';
+    protected string $after_param = '_after';
     protected int $limit = 20;
 
     protected string $uri;

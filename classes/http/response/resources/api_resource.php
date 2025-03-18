@@ -1,6 +1,7 @@
 <?php namespace webservice_api\http\response\resources;
 
 use \JsonSerializable;
+use \moodle_url;
 
 abstract class api_resource implements JsonSerializable {
     protected array $attributes = [];
@@ -12,7 +13,7 @@ abstract class api_resource implements JsonSerializable {
         $this->attributes = (array) $attributes;
     }
 
-    public function add_attribute(string $key, mixed $value): self {
+    public function add_attribute(string $key, mixed $value): static {
         $this->attributes[$key] = $value;
         return $this;
     }
@@ -21,12 +22,16 @@ abstract class api_resource implements JsonSerializable {
         return $this->attributes[$key] ?? null;
     }
 
-    public function add_link(string $rel, string $href, string $method = 'GET', array $attributes = []): self {
+    public function add_link(string $rel, string|moodle_url $href, string $method = 'GET', array $attributes = []): static {
+        if($href instanceof moodle_url){
+            $href = $href->out(false);
+        }
+
         $this->links[$rel] = array_merge(['href' => $href, 'method' => strtoupper($method)], $attributes);
         return $this;
     }
 
-    public function embed(string $key, object|array $resource): self {
+    public function embed(string $key, object|array $resource): static {
         if(is_object($resource) && is_a($resource, JsonSerializable::class, true)){
             $this->embedded[$key] = $resource->jsonSerialize();
         }else{
