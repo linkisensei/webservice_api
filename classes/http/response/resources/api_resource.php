@@ -22,6 +22,11 @@ abstract class api_resource implements JsonSerializable {
         return $this->attributes[$key] ?? null;
     }
 
+    public function remove_attribute(string $key): static {
+        unset($this->attributes[$key]);
+        return $this;
+    }
+
     public function add_link(string $rel, string|moodle_url $href, string $method = 'GET', array $attributes = []): static {
         if($href instanceof moodle_url){
             $href = $href->out(false);
@@ -42,4 +47,21 @@ abstract class api_resource implements JsonSerializable {
     }
 
     abstract function jsonSerialize(): mixed;
+
+    /**
+     * Makes multiple instances of this resource from a
+     * iterator containing its attributes
+     *
+     * @param \iterator $colletion
+     * @return array
+     */
+    public static function from_collection(\iterator $colletion) : array {
+        $instances = [];
+
+        foreach ($colletion as $attributes) {
+            $instances[] = new static($attributes);
+        }
+
+        return $instances;
+    }
 }
