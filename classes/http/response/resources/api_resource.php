@@ -52,10 +52,10 @@ abstract class api_resource implements JsonSerializable {
      * Makes multiple instances of this resource from a
      * iterator containing its attributes
      *
-     * @param \iterator $colletion
+     * @param iterator|array $colletion
      * @return array
      */
-    public static function from_collection(\iterator $colletion) : array {
+    public static function from_collection(\iterator|array $colletion) : array {
         $instances = [];
 
         foreach ($colletion as $attributes) {
