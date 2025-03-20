@@ -75,7 +75,7 @@ class api_route_requested extends \core\event\base {
         $this->data['crud'] = match (strtoupper($method)) {
             'GET', 'OPTIONS', 'HEAD' => 'r',
             'DELETE' => 'd',
-            default => 'w',
+            default => 'c',
         };
         return $this;
     }
