@@ -93,7 +93,7 @@ class api_exception extends Exception implements HttpExceptionInterface {
      * @param boolean $addAsPrevious
      * @return static
      */
-    public static function fromException(\Exception $ex, bool $addAsPrevious = false) : static {
+    public static function fromException(Exception $ex, bool $addAsPrevious = false) : static {
         $previous = $addAsPrevious ? $ex : null;
 
         if($ex instanceof \League\Route\Http\Exception){

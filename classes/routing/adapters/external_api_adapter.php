@@ -7,6 +7,8 @@ use \core_external\external_function_parameters;
 use \core_external\external_api;
 use \invalid_parameter_exception;
 use \webservice_api\exceptions\api_exception;
+use \webservice_api\exceptions\validation_exception;
+
 class external_api_adapter {
     protected string $class;
     protected string $method;
@@ -49,7 +51,7 @@ class external_api_adapter {
             $parameters = $this->server_request_to_api_parameters($request, $args);
             return call_user_func_array([$this->class, $this->method], $parameters);
         } catch (invalid_parameter_exception $th) {
-            throw api_exception::fromException($th)->setStatusCode(400);
+            throw validation_exception::fromException($th);
         }
     }
 
