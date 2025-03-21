@@ -25,7 +25,6 @@ class validation_exception extends api_exception {
     }
 
     protected static function fromInvalidParameterException(invalid_parameter_exception $ex, bool $addAsPrevious = false) : static {
-        $debuginfo = $ex->debuginfo;
         $previous = $addAsPrevious ? $ex->getPrevious() : null;
 
         if(preg_match(self::TYPE_MISMATCH_REGEX, $ex->debuginfo, $matches)){
