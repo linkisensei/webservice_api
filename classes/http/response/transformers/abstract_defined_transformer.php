@@ -41,6 +41,11 @@ abstract class abstract_defined_transformer extends abstract_data_transformer {
         if($type == PARAM_RAW){
             return $value;
         }
+
+        if($type == PARAM_BOOL){
+            return (bool) clean_param($value, $type);
+        }
+
         return clean_param($value, $type);
     }
 }

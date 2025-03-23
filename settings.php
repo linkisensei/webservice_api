@@ -12,7 +12,7 @@ if($hassiteconfig){
         $name = \webservice_api\config::SETTING_JWT_TTL;
         $settingspage->add(
             new admin_setting_configduration(
-                $name,
+                "webservice_api/$name",
                 new lang_string("settings:$name", 'webservice_api'),
                 '',
                 HOURSECS
@@ -22,7 +22,7 @@ if($hassiteconfig){
         $name = \webservice_api\config::SETTING_JWT_REFRESH_TTL;
         $settingspage->add(
             new admin_setting_configduration(
-                $name,
+                "webservice_api/$name",
                 new lang_string("settings:$name", 'webservice_api'),
                 '',
                 DAYSECS
