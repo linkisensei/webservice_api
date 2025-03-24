@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-// define('NO_DEBUG_DISPLAY', true);
+define('NO_DEBUG_DISPLAY', true);
 define('WS_SERVER', true);
 
 require_once(__DIR__ . '/classes/handlers/error_handler.php');
