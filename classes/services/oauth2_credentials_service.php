@@ -67,7 +67,7 @@ final class oauth2_credentials_service {
         $credentials = $this->get_credentials($client_id);
         $this->check_permissions((int) $credentials->get('user_id'));
 
-        if($expires_at <= time()){
+        if($expires_at !== 0 && $expires_at <= time()){
             throw api_exception::fromApiString('exception:invalid_credentials_expiration')->setStatusCode(400);
         }
 
