@@ -6,7 +6,6 @@ use \Psr\Http\Server\RequestHandlerInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \Psr\Http\Message\ResponseInterface;
 
-
 class moodle_session_auth extends MiddlewareInterface {
 
     protected $accept_guest = false;

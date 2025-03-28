@@ -48,6 +48,11 @@ class openapi_documentation_service {
         }
     }
 
+    protected function skip_cache() : bool {
+        global $CFG;
+        return $CFG?->debug == DEBUG_DEVELOPER;
+    }
+
     /**
      * Returns the content of a openapi file.
      *
@@ -56,6 +61,10 @@ class openapi_documentation_service {
      */
     public function get(string $format = self::FORMAT_JSON) : string {
         $this->validate_format($format);
+
+        if($this->skip_cache()){
+            return $this->generate($format);
+        }
 
         $cache = cache::make('webservice_api', self::CACHE_AREA);
         
@@ -79,13 +88,27 @@ class openapi_documentation_service {
         $routes = $this->get_all_routes($router);
 
         $controllers = [];
-
         foreach ($routes as $route) {
             $this->resolve_and_append_file($controllers, $route->getCallable());
         }
 
+        $docs = [];
+        $callbacks = get_plugins_with_function('webservice_api_openapi_definitions');
+        foreach ($callbacks as $plugintype => $plugins) {
+            foreach ($plugins as $plugin => $callback) {
+                $paths = $callback();
+                $paths = is_array($paths) ? $paths : [$paths];
+                foreach ($paths as $path) {
+                    if(file_exists($path)){
+                        $docs[] = $path;
+                    }
+                }
+            }
+        }
+
         $this->invalidate_controllers_opcache($controllers);
-        $openapi = @Generator::scan(array_keys($controllers));
+        $paths = array_merge(array_keys($controllers), $docs);
+        $openapi = @Generator::scan($paths);
 
         // Appending server
         $openapi->servers = [
