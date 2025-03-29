@@ -122,7 +122,7 @@ The API documentation is automatically generated and can be accessed at:
 `@see classes/controllers/auth/oauth2_controller.php`
 
 #### Aditional documentation
-If you want to define schemas outside or your controllers, that are loaded automatically, you will need to define a callback on your lib.php.
+If you want to define schemas outside of your controllers, that are loaded automatically, you will need to define a callback on your lib.php.
 
 ```php
 /**

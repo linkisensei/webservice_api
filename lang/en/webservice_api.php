@@ -62,3 +62,4 @@ $string['exception:invalid_client_credentials'] = "Invalid client credentials";
 $string['exception:expired_client_credentials'] = "Expired client credentials";
 $string['exception:invalid_credentials_expiration'] = "Credentials expiration must be a future timestamp";
 $string['exception:credentials_already_exist'] = 'Credentials already exist for the specified user';
+$string['exception:pagination_limit_violation'] = 'The maximum allowed page size is {$a}';
