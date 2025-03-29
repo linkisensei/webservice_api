@@ -3,7 +3,7 @@
 use Psr\Http\Message\ServerRequestInterface;
 use \moodle_url;
 use \coding_exception;
-use webservice_api\exceptions\validation_exception;
+use \webservice_api\exceptions\api_exception;
 use \webservice_api\helpers\routing\api_route_helper;
 
 abstract class abstract_pagination_helper {
@@ -25,6 +25,9 @@ abstract class abstract_pagination_helper {
 
     /**
      * Get the limit for pagination.
+     * 
+     * @throws \webservice_api\exceptions\api_exception
+     * @return int
      */
     public function get_limit(): int {
         $limit = (int) ($this->query_params[$this->limit_param] ?? $this->default_limit);
@@ -34,7 +37,7 @@ abstract class abstract_pagination_helper {
         }
 
         if($this->throw_on_limit_violation){
-            throw validation_exception::fromApiString('exception:pagination_limit_violation', $this->max_limit);
+            throw api_exception::fromApiString('exception:pagination_limit_violation', $this->max_limit)->setStatusCode(400);
         }
 
         return $this->max_limit;
