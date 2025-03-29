@@ -20,7 +20,7 @@ abstract class abstract_pagination_helper {
         $this->uri = api_route_helper::get_api_absolute_uri($request->getUri()->getPath());
         $this->method = $request->getMethod();
         $this->query_params = $request->getQueryParams();
-        $this->max_limit = INF;
+        $this->max_limit = intval(INF);
     }
 
     /**
