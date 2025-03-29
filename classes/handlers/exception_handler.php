@@ -30,7 +30,7 @@ class exception_handler {
         }
 
         if($th instanceof \required_capability_exception){
-            $info['status'] = 401;
+            $info['status'] = 403;
         }
 
         return self::make_response($info, $info['status'], $response);
