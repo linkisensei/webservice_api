@@ -26,9 +26,9 @@ class oauth2_token_auth extends abstract_auth {
             return $DB->get_record('user', ['id' => $token->get_user_id()]) ?: null;
 
         } catch (BeforeValidException|ExpiredException $ex) {
-            throw auth_failure_exception::fromString('invalidtimedtoken', 'webservice')->setReason('expired_token');
+            throw auth_failure_exception::fromString('exception:invalid_timed_token', 'webservice_api')->setReason('expired_token');
         } catch (Exception $ex){
-            throw auth_failure_exception::fromString('invalidtoken', 'webservice')->setReason('invalid_token');
+            throw auth_failure_exception::fromString('exception:invalid_token', 'webservice_api')->setReason('invalid_token');
         }
     }
 }

@@ -63,3 +63,5 @@ $string['exception:expired_client_credentials'] = "Credenciais do cliente expira
 $string['exception:invalid_credentials_expiration'] = "A expiração das credenciais deve ser um timestamp futuro";
 $string['exception:credentials_already_exist'] = 'Credenciais já existentes para este usuário';
 $string['exception:pagination_limit_violation'] = 'O tamanho máximo permitido para a página é {$a}';
+$string['exception:invalid_timed_token'] = 'Token de acesso expirado.';
+$string['exception:invalid_token'] = 'Token de acesso ausente ou inválido.';
