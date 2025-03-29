@@ -12,6 +12,8 @@ final class config {
     const SETTING_JWT_TTL = 'jwt_ttl';
     const SETTING_JWT_REFRESH_SECRET = 'jwt_refresh_secret';
     const SETTING_JWT_REFRESH_TTL = 'jwt_refresh_ttl';
+    const SETTING_SWAGGER_SHOW_SCHEMAS = 'swagger_show_schemas';
+    const SETTING_SWAGGER_ENABLED = 'swagger_enabled';
 
     private static config $instance;
     private object $config;
@@ -70,6 +72,16 @@ final class config {
         global $CFG;
         return $CFG->lang;
     }
+
+    public function is_swagger_enabled() : bool {
+        return (bool) $this->get(self::SETTING_SWAGGER_ENABLED, false);
+    }
+
+    public function show_schemas_on_swagger() : bool {
+        return (bool) $this->get(self::SETTING_SWAGGER_SHOW_SCHEMAS, false);
+    }
+
+    
 
     /**
      * To be used on install.php

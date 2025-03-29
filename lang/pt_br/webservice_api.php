@@ -15,6 +15,9 @@ $string['event:oauth2_credentials_deleted'] = 'Credenciais OAuth2 excluídas';
 $string['settings:manage_title'] = 'Gerenciar REST API';
 $string['settings:jwt_ttl'] = 'Expiração do token';
 $string['settings:jwt_refresh_ttl'] = 'Expiração do token de atualização';
+$string['settings:swagger_enabled'] = 'Habilitar Swagger';
+$string['settings:swagger_show_schemas'] = 'Mostrar Schemas';
+$string['settings:documentation_header'] = "Documentação e Swagger";
 
 
 $string['api:use'] = 'acessar esta API';

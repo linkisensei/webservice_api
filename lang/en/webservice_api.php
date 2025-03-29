@@ -15,6 +15,9 @@ $string['event:oauth2_credentials_deleted'] = 'Oauth2 credentials deleted';
 $string['settings:manage_title'] = 'Manage REST API';
 $string['settings:jwt_ttl'] = 'Token expires in';
 $string['settings:jwt_refresh_ttl'] = 'Refresh token expires in';
+$string['settings:swagger_enabled'] = 'Enable swagger';
+$string['settings:swagger_show_schemas'] = 'Show schemas';
+$string['settings:documentation_header'] = "Documentation and Swagger";
 
 
 $string['api:use'] = 'access this API';

@@ -3,9 +3,11 @@
 use \Psr\Http\Message\ServerRequestInterface;
 use \webservice_api\controllers\abstract_controller;
 use \webservice_api\services\openapi_documentation_service;
+use \Laminas\Diactoros\Response\EmptyResponse;
 use \Laminas\Diactoros\Response\HtmlResponse;
 use \Laminas\Diactoros\Response\TextResponse;
 use \context_system;
+use \webservice_api\config;
 use \webservice_api\helpers\routing\api_route_helper;
 
 class openapi_controller extends abstract_controller {
@@ -36,11 +38,18 @@ class openapi_controller extends abstract_controller {
     public function serve_swagger(ServerRequestInterface $request, array $args = []){
         global $PAGE, $OUTPUT, $SITE;
 
+        $config = config::instance();
+
+        if(!$config->is_swagger_enabled()){
+            return new EmptyResponse(403);
+        }
+
         $PAGE->set_context(context_system::instance());
 
         $data = [
             'title' => "$SITE->fullname API",
             'openapi_file_url' => api_route_helper::get_api_absolute_uri('/docs/openapi.json'),
+            'default_models_expand_depth' => $config->show_schemas_on_swagger() ? '1' : '-1',
         ];
 
         $content = $OUTPUT->render_from_template('webservice_api/docs/swagger', $data);
