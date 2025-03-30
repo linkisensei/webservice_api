@@ -4,7 +4,7 @@ defined('MOODLE_INTERNAL') || die;
 
 if($hassiteconfig){
     $settingspage = new admin_settingpage(
-        'manage_webservice_api',
+        'webservicesettingapi',
         new lang_string('settings:manage_title', 'webservice_api')
     );
 
