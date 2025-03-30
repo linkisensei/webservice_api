@@ -108,7 +108,9 @@ class openapi_documentation_service {
 
         $this->invalidate_controllers_opcache($controllers);
         $paths = array_merge(array_keys($controllers), $docs);
-        $openapi = @Generator::scan($paths);
+        $openapi = @Generator::scan($paths, [
+            'version' => \OpenApi\Annotations\OpenApi::VERSION_3_1_0
+        ]);
 
         // Appending server
         $openapi->servers = [
