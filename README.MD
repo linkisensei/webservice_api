@@ -96,6 +96,8 @@ $CFG->webservice_api = [
     'jwt_ttl' => 3600,
     'jwt_refresh_secret' => 'your-refresh-secret-key',
     'jwt_refresh_ttl' => 86400,
+    'swagger_enabled' => true,
+    'swagger_show_schemas' => false,
 ];
 
 // Although, the jwt secrets are automatically generated during install
