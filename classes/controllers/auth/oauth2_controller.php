@@ -159,21 +159,21 @@ class oauth2_controller extends abstract_controller{
             content: new OA\JsonContent(
                 oneOf: [
                     new OA\Schema(
-                        description: new lang_string("docs:password_grant_request", "webservice_api"),
-                        required: ["grant_type", "username", "password"],
-                        properties: [
-                            new OA\Property(property: "grant_type", type: "string", example: "password"),
-                            new OA\Property(property: "username", type: "string", example: "user@example.com"),
-                            new OA\Property(property: "password", type: "string", example: "securepassword")
-                        ]
-                    ),
-                    new OA\Schema(
                         description: new lang_string("docs:client_credentials_grant_request", "webservice_api"),
                         required: ["grant_type", "client_id", "client_secret"],
                         properties: [
                             new OA\Property(property: "grant_type", type: "string", example: "client_credentials"),
                             new OA\Property(property: "client_id", type: "string", example: "your-client-id"),
                             new OA\Property(property: "client_secret", type: "string", example: "your-client-secret")
+                        ]
+                    ),
+                    new OA\Schema(
+                        description: new lang_string("docs:password_grant_request", "webservice_api"),
+                        required: ["grant_type", "username", "password"],
+                        properties: [
+                            new OA\Property(property: "grant_type", type: "string", example: "password"),
+                            new OA\Property(property: "username", type: "string", example: "user@example.com"),
+                            new OA\Property(property: "password", type: "string", example: "securepassword")
                         ]
                     ),
                     new OA\Schema(
