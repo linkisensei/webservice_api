@@ -6,6 +6,10 @@ use \webservice_api\exceptions\api_exception;
 class auth_failure_exception extends api_exception {
     protected string $reason;
 
+    public function __construct(string $message, int $status = 401, ?\Throwable $previous = null){
+        parent::__construct($message, $status, $previous);
+    }
+
     /**
      * Converts into a api_auth_failed event
      *
