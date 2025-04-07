@@ -54,6 +54,7 @@ $string['exception:invalid_access_token_secret'] = 'Segredo do token de acesso n
 $string['exception:missing_grant_type'] = "Faltando grant_type";
 $string['exception:invalid_user_credentials'] = "Credenciais de usuário inválidas";
 $string['exception:missing_required_key'] = 'Faltando chave obrigatória \"{$a}\"';
+$string['exception:invalid_param_type'] = 'Tipo inválido para o parâmetro "{$a->key}": o tipo esperado é "{$a->type}".';
 $string['exception:empty_key'] = 'Chave \"{$a}\" vazia';
 $string['exception:invalid_key'] = 'Chave {$a} inválida';
 $string['exception:invalid_client_user'] = 'Usuário do cliente inválido';

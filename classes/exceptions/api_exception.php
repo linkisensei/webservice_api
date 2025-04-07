@@ -82,7 +82,7 @@ class api_exception extends Exception implements HttpExceptionInterface {
      * @param string $a
      * @return static
      */
-    public static function fromApiString(string $errorcode, string $a = '') : static {
+    public static function fromApiString(string $errorcode, string|object $a = '') : static {
         return new static(get_string($errorcode, 'webservice_api', $a));
     }
 

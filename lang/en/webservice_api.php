@@ -54,6 +54,7 @@ $string['exception:invalid_access_token_secret'] = 'Access token secret not conf
 $string['exception:missing_grant_type'] = "Missing grant_type";
 $string['exception:invalid_user_credentials'] = "Invalid user credentials";
 $string['exception:missing_required_key'] = 'Missing required \"{$a}\"';
+$string['exception:invalid_param_type'] = 'Invalid type for parameter \"{$a->key}\": expected type \"{$a->type}\".';
 $string['exception:empty_key'] = 'Empty \"{$a}\"';
 $string['exception:invalid_key'] = 'Invalid {$a}';
 $string['exception:invalid_client_user'] = 'Invalid client user';
