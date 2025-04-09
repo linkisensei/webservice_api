@@ -27,4 +27,5 @@ $router->get('/me', [user_controller::class, 'get_current_user'])
     ->middleware(new request_logger());
 
 // Documentation
+$router->get('/docs', [openapi_controller::class, 'redirect_to_index']);
 $router->get('/docs/openapi.{format}', [openapi_controller::class, 'get_openapi_file']);

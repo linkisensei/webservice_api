@@ -16,7 +16,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component    = 'webservice_api';
 $plugin->release      = '3.1';
-$plugin->version      = 2025033000;
+$plugin->version      = 2025040900;
 $plugin->requires     = 2023042400;
 $plugin->supported    = [402, 404];
 $plugin->maturity     = MATURITY_BETA;

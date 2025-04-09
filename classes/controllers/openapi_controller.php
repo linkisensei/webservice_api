@@ -55,4 +55,30 @@ class openapi_controller extends abstract_controller {
         $content = $OUTPUT->render_from_template('webservice_api/docs/swagger', $data);
         return new HtmlResponse($content);
     }
+
+    /**
+     * Redirects the user to the same route with "index.php" explicitly included in the path.
+     *
+     * In some server environments, the URL rewriting configuration used by the API
+     * may prevent automatic redirection to the index.php file. This method ensures
+     * compatibility by explicitly redirecting to the correct entry point.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The incoming HTTP request.
+     * @return \Laminas\Diactoros\Response\RedirectResponse A redirect response to the updated path.
+     */
+    public function redirect_to_index(ServerRequestInterface $request){
+        $uri = $request->getUri();
+
+        $path = rtrim($uri->getPath(), '/');
+
+        if(!str_ends_with($path, 'index.php')){
+            $path .= '/index.php';
+        }
+
+        $newUri = $uri
+            ->withPath($path)
+            ->withQuery('');
+
+        return new \Laminas\Diactoros\Response\RedirectResponse((string)$newUri, 302);
+    }
 }
